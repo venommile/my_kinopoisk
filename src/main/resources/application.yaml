@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:C:\Users\galts\IdeaProjects\Tes\my_kinopoisk\data\mydb\demo;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  h2:
+    console.enabled: true
+  liquibase:
+    change-log: classpath:db/changelog/dbchangelog.xml
+    enabled: true
+
