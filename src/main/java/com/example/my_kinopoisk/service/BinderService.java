@@ -1,6 +1,7 @@
 package com.example.my_kinopoisk.service;
 
 
+import com.example.my_kinopoisk.domain.entities.Movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
