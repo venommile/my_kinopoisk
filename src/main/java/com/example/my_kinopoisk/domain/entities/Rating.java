@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String title;
     private String description;
     private Float score;
@@ -24,6 +26,10 @@ public class Rating {
 
     @ManyToMany(mappedBy = "ratings",fetch = FetchType.LAZY)
     private List<Movie> movies = new ArrayList<>();
+
+    public String getTitle() {
+        return title;
+    }
 
     public void addMovie(Movie movie){
         movies.add(movie);

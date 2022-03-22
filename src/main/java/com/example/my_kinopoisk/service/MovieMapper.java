@@ -1,10 +1,10 @@
 package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.MovieDto;
-import com.example.my_kinopoisk.domain.entities.Movie;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
+//nullpropertymappingstrategy
 public interface MovieMapper {
     MovieDto toDto(Movie movie);
 

@@ -1,7 +1,6 @@
 package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.MovieDto;
-import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,4 +48,6 @@ public class MovieService {
     public List<MovieDto> getMoviesOnlyDto() {
         return getMovies().stream().map(movieMapper::toDto).collect(Collectors.toList());
     }
+
+
 }

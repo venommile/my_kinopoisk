@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet author="liquibase-docs" id="loadData-example">
+        <loadData
+            commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="movies.csv"
+            quotchar="'"
+            relativeToChangelogFile="true"
+            separator=";"
+            tableName="movie"
+            usePreparedStatements="true">
+            <column name="id" type="BIGINT"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="age_limit" type="INT"/>
+            <column name="country_of_production" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="release_date" type="timestamp with time zone"/>
+
+        </loadData>
+
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,8 +1,7 @@
 package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.dto.MovieDto;
-import com.example.my_kinopoisk.domain.entities.Movie;
-import com.example.my_kinopoisk.service.GenreService;
+import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/movies")
 public class MovieController {
     private final MovieService movieService;
-    private final GenreService genreService;
-
+    private final BinderService binderService;
     @GetMapping("")
     public ResponseEntity<Iterable<MovieDto>> getMovies() {
         return ResponseEntity.ok(movieService.getMoviesOnlyDto());
@@ -46,10 +44,8 @@ public class MovieController {
     @PutMapping("/{movieId}/genre/{genreId}")
     public Movie genreToMovie(@PathVariable Long movieId,
                               @PathVariable Long genreId) {
-        var movie = movieService.getMovie(movieId);
-        var genre = genreService.getGenre(genreId);
-        movie.addGenre(genre);
-        return movieService.saveMovie(movie);
+        return binderService.bindMovieGenre(movieId,genreId);
+
     }
 
 //    @PutMapping("/{movieId}/actor/{actorId}")

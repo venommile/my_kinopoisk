@@ -8,5 +8,9 @@
       http://www.liquibase.org/xml/ns/pro
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
     <include file="init/000-init.xml" relativeToChangelogFile="true"/>
+    <include file = "data/genre/load_genre_data.xml" relativeToChangelogFile="true"/>
+
+    <include file="data/movie/load_movie_data.xml" relativeToChangelogFile="true"/>
+
 
 </databaseChangeLog>

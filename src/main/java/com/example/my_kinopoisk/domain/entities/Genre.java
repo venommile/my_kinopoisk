@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +24,11 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
+
+    @NotNull
     private String title;
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @OneToMany
     @JsonIgnore
     private List<Movie> movies = new ArrayList<>();
 
