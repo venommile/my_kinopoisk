@@ -1,6 +1,7 @@
 package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.dto.MovieDto;
+import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
 import lombok.RequiredArgsConstructor;

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1647940829266-1" author="galts (generated)">
+        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1000"/>
+    </changeSet>
+    <changeSet id="1647940829266-2" author="galts (generated)">
+        <createTable tableName="actor">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_actor"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
+            <column name="movie_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-3" author="galts (generated)">
+        <createTable tableName="film_crew_worker">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_filmcrewworker"/>
+            </column>
+            <column name="movie_id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-4" author="galts (generated)">
+        <createTable tableName="genre">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_genre"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-5" author="galts (generated)">
+        <createTable tableName="genre_movies">
+            <column name="genre_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movies_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-6" author="galts (generated)">
+        <createTable tableName="genre_persons">
+            <column name="genres_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="persons_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-7" author="galts (generated)">
+        <createTable tableName="movie">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="age_limit" type="INT"/>
+            <column name="country_of_production" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="release_date" type="timestamp with time zone"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-8" author="galts (generated)">
+        <createTable tableName="movie_actors">
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_actors"/>
+            </column>
+            <column name="actors_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_actors"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-9" author="galts (generated)">
+        <createTable tableName="movie_film_crews">
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_filmcrews"/>
+            </column>
+            <column name="film_crews_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_filmcrews"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-10" author="galts (generated)">
+        <createTable tableName="movie_genres">
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_genres"/>
+            </column>
+            <column name="genres_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_genres"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-11" author="galts (generated)">
+        <createTable tableName="movie_ratings">
+            <column name="movies_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_ratings"/>
+            </column>
+            <column name="ratings_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_ratings"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-12" author="galts (generated)">
+        <createTable tableName="person">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_person"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="height" type="FLOAT"/>
+            <column name="birthday" type="DATE"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-13" author="galts (generated)">
+        <createTable tableName="person_actor_roles">
+            <column name="person_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actor_roles_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-14" author="galts (generated)">
+        <createTable tableName="person_film_crew_roles">
+            <column name="person_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="film_crew_roles_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-15" author="galts (generated)">
+        <createTable tableName="rating">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_rating"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="score" type="FLOAT"/>
+            <column name="count_scores" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-16" author="galts (generated)">
+        <createTable tableName="review">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_review"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="public_date" type="timestamp with time zone"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="body" type="VARCHAR(255)"/>
+            <column name="rating" type="FLOAT"/>
+            <column name="movie_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1647940829266-17" author="galts (generated)">
+        <addUniqueConstraint columnNames="name, surname" constraintName="FullName" tableName="person"/>
+    </changeSet>
+    <changeSet id="1647940829266-18" author="galts (generated)">
+        <addUniqueConstraint columnNames="movies_id" constraintName="uc_genre_movies_movies" tableName="genre_movies"/>
+    </changeSet>
+    <changeSet id="1647940829266-19" author="galts (generated)">
+        <addUniqueConstraint columnNames="actors_id" constraintName="uc_movie_actors_actors" tableName="movie_actors"/>
+    </changeSet>
+    <changeSet id="1647940829266-20" author="galts (generated)">
+        <addUniqueConstraint columnNames="film_crews_id" constraintName="uc_movie_film_crews_filmcrews"
+                             tableName="movie_film_crews"/>
+    </changeSet>
+    <changeSet id="1647940829266-21" author="galts (generated)">
+        <addUniqueConstraint columnNames="actor_roles_id" constraintName="uc_person_actor_roles_actorroles"
+                             tableName="person_actor_roles"/>
+    </changeSet>
+    <changeSet id="1647940829266-22" author="galts (generated)">
+        <addUniqueConstraint columnNames="film_crew_roles_id" constraintName="uc_person_film_crew_roles_filmcrewroles"
+                             tableName="person_film_crew_roles"/>
+    </changeSet>
+    <changeSet id="1647940829266-23" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="actor" constraintName="FK_ACTOR_ON_MOVIE"
+                                 referencedColumnNames="id" referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-24" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="film_crew_worker"
+                                 constraintName="FK_FILMCREWWORKER_ON_MOVIE" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-25" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="review" constraintName="FK_REVIEW_ON_MOVIE"
+                                 referencedColumnNames="id" referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-26" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="genre_id" baseTableName="genre_movies"
+                                 constraintName="fk_genmov_on_genre" referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+    </changeSet>
+    <changeSet id="1647940829266-27" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movies_id" baseTableName="genre_movies"
+                                 constraintName="fk_genmov_on_movie" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-28" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="genres_id" baseTableName="genre_persons"
+                                 constraintName="fk_genper_on_genre" referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+    </changeSet>
+    <changeSet id="1647940829266-29" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="persons_id" baseTableName="genre_persons"
+                                 constraintName="fk_genper_on_person" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet id="1647940829266-30" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="actors_id" baseTableName="movie_actors"
+                                 constraintName="fk_movact_on_actor" referencedColumnNames="id"
+                                 referencedTableName="actor"/>
+    </changeSet>
+    <changeSet id="1647940829266-31" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="movie_actors"
+                                 constraintName="fk_movact_on_movie" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-32" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="film_crews_id" baseTableName="movie_film_crews"
+                                 constraintName="fk_movfilcre_on_film_crew_worker" referencedColumnNames="id"
+                                 referencedTableName="film_crew_worker"/>
+    </changeSet>
+    <changeSet id="1647940829266-33" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="movie_film_crews"
+                                 constraintName="fk_movfilcre_on_movie" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-34" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="genres_id" baseTableName="movie_genres"
+                                 constraintName="fk_movgen_on_genre" referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+    </changeSet>
+    <changeSet id="1647940829266-35" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="movie_genres"
+                                 constraintName="fk_movgen_on_movie" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-36" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="movies_id" baseTableName="movie_ratings"
+                                 constraintName="fk_movrat_on_movie" referencedColumnNames="id"
+                                 referencedTableName="movie"/>
+    </changeSet>
+    <changeSet id="1647940829266-37" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="ratings_id" baseTableName="movie_ratings"
+                                 constraintName="fk_movrat_on_rating" referencedColumnNames="id"
+                                 referencedTableName="rating"/>
+    </changeSet>
+    <changeSet id="1647940829266-38" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="actor_roles_id" baseTableName="person_actor_roles"
+                                 constraintName="fk_peractrol_on_actor" referencedColumnNames="id"
+                                 referencedTableName="actor"/>
+    </changeSet>
+    <changeSet id="1647940829266-39" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="person_actor_roles"
+                                 constraintName="fk_peractrol_on_person" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet id="1647940829266-40" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="film_crew_roles_id" baseTableName="person_film_crew_roles"
+                                 constraintName="fk_perfilcrerol_on_actor" referencedColumnNames="id"
+                                 referencedTableName="actor"/>
+    </changeSet>
+    <changeSet id="1647940829266-41" author="galts (generated)">
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="person_film_crew_roles"
+                                 constraintName="fk_perfilcrerol_on_person" referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+
+</databaseChangeLog>
