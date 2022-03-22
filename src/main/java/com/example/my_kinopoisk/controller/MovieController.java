@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.controller;
 
-import com.example.my_kinopoisk.domain.dto.MovieDto;
+import com.example.my_kinopoisk.domain.dto.ShortMovieDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
@@ -22,7 +22,7 @@ public class MovieController {
     private final MovieService movieService;
     private final BinderService binderService;
     @GetMapping("")
-    public ResponseEntity<Iterable<MovieDto>> getMovies() {
+    public ResponseEntity<Iterable<ShortMovieDto>> getMovies() {
         return ResponseEntity.ok(movieService.getMoviesOnlyDto());
     }
 
@@ -32,8 +32,8 @@ public class MovieController {
     }
 
     @PostMapping("")
-    public ResponseEntity<MovieDto> saveMovie(@RequestBody MovieDto movieDto) {
-        return ResponseEntity.ok(movieService.saveMovieDto(movieDto));
+    public ResponseEntity<ShortMovieDto> saveMovie(@RequestBody ShortMovieDto shortMovieDto) {
+        return ResponseEntity.ok(movieService.saveMovieDto(shortMovieDto));
     }
 
     @DeleteMapping("/{id}")
@@ -46,8 +46,9 @@ public class MovieController {
     public Movie genreToMovie(@PathVariable Long movieId,
                               @PathVariable Long genreId) {
         return binderService.bindMovieGenre(movieId,genreId);
-
     }
+
+
 
 //    @PutMapping("/{movieId}/actor/{actorId}")
 //    public Movie actorToMovie(@PathVariable Long movieId,

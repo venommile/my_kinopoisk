@@ -1,11 +1,13 @@
 package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.dto.GenreDto;
-import com.example.my_kinopoisk.domain.dto.MovieDto;
+import com.example.my_kinopoisk.domain.entities.Genre;
 import com.example.my_kinopoisk.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +24,19 @@ public class GenreController {
         return ResponseEntity.ok(genreService.saveGenreDto(genreDto));
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<Iterable<GenreDto>> getGenres() {
-//        return ResponseEntity.ok(genreService.getGenres());
-//    }
+    @GetMapping("")
+    public ResponseEntity<Iterable<Genre>> getGenres() {
+        return ResponseEntity.ok(genreService.getGenres());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGenre(@PathVariable Long id){
+        genreService.deleteGenre(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
 
 

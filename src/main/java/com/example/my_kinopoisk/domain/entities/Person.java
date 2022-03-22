@@ -36,6 +36,7 @@ public class Person {
     private String description;
     private Float height;
     private Date birthday;
+    private Gender gender;
 
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -43,9 +44,10 @@ public class Person {
 
     @OneToMany(fetch = FetchType.LAZY)
 
-    private List<Actor> filmCrewRoles = new ArrayList<>();
+    private List<FilmCrewWorker> filmCrewRoles = new ArrayList<>();
 
     @ManyToMany(mappedBy = "persons",fetch = FetchType.LAZY)
     private Set<Genre> genres = new HashSet<>();
+
 
 }

@@ -130,29 +130,29 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <configuration>
-                    <propertyFileWillOverride>true</propertyFileWillOverride>
-                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>update</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.yaml</groupId>
-                        <artifactId>snakeyaml</artifactId>
-                    </dependency>
-                </dependencies>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.liquibase</groupId>-->
+<!--                <artifactId>liquibase-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <propertyFileWillOverride>true</propertyFileWillOverride>-->
+<!--                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>-->
+<!--                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>update</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.yaml</groupId>-->
+<!--                        <artifactId>snakeyaml</artifactId>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

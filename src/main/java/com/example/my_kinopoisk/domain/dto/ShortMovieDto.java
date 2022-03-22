@@ -13,7 +13,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieDto implements Serializable {
+public class ShortMovieDto implements Serializable {
+    private Long id;
     private String title;
     private Integer ageLimit;
     private String countryOfProduction;

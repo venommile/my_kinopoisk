@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,8 +19,7 @@ public class FilmCrewWorker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Movie movie;
+
 
 
     @NotNull
@@ -27,5 +27,10 @@ public class FilmCrewWorker {
     private String surname;
     private String role;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Person person;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Movie movie;
 
 }

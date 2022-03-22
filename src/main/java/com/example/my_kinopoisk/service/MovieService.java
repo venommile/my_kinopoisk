@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.service;
 
-import com.example.my_kinopoisk.domain.dto.MovieDto;
+import com.example.my_kinopoisk.domain.dto.ShortMovieDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
+    private final MovieShortMapper movieShortMapper;
 
     public List<Movie> getMovies() {
         return StreamSupport.stream(
@@ -32,10 +32,10 @@ public class MovieService {
     }
 
 
-    public MovieDto saveMovieDto(MovieDto movieDto) {
-        return movieMapper.toDto(
+    public ShortMovieDto saveMovieDto(ShortMovieDto shortMovieDto) {
+        return movieShortMapper.toDto(
             movieRepository.save(
-                movieMapper.toEntity(movieDto)
+                movieShortMapper.toEntity(shortMovieDto)
             )
         );
     }
@@ -46,8 +46,8 @@ public class MovieService {
     }
 
 
-    public List<MovieDto> getMoviesOnlyDto() {
-        return getMovies().stream().map(movieMapper::toDto).collect(Collectors.toList());
+    public List<ShortMovieDto> getMoviesOnlyDto() {
+        return getMovies().stream().map(movieShortMapper::toDto).collect(Collectors.toList());
     }
 
 

@@ -21,6 +21,7 @@ public class Actor {
     private Long id;
 
 
+
     @NotNull
     private String name;
     private String surname;
@@ -29,5 +30,7 @@ public class Actor {
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Person person;
 
 }
