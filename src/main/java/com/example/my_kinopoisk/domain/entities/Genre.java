@@ -28,7 +28,7 @@ public class Genre {
 
     @NotNull
     private String title;
-    @OneToMany
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Movie> movies = new ArrayList<>();
 
