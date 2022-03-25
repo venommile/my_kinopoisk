@@ -1,5 +1,7 @@
 package com.example.my_kinopoisk.service;
 
+import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
+import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.dto.ShortMovieDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.repository.MovieRepository;
@@ -16,11 +18,20 @@ import java.util.stream.StreamSupport;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieShortMapper movieShortMapper;
+    private final MovieViewMapper movieViewMapper;
+    private final MovieCreateMapper movieCreateMapper;
 
     public List<Movie> getMovies() {
         return StreamSupport.stream(
             movieRepository.findAll().spliterator(),
             false).collect(Collectors.toList());
+    }
+
+    public MovieViewDto getMovieViewDto(Long id) {
+        var t =  movieRepository.findById(id).orElseThrow(() -> new RuntimeException("not found"));
+        return movieViewMapper.toDto(
+           t
+        );
     }
 
     public Movie getMovie(Long id) {
@@ -38,6 +49,13 @@ public class MovieService {
                 movieShortMapper.toEntity(shortMovieDto)
             )
         );
+    }
+
+    public MovieViewDto saveMovieDto(MovieCreateDto movieDto) {
+        return movieViewMapper.toDto(
+            movieRepository.save(
+                movieCreateMapper.toEntity(movieDto)
+            ));
     }
 
 

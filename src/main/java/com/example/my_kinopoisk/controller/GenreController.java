@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.controller;
 
-import com.example.my_kinopoisk.domain.dto.GenreDto;
+import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.entities.Genre;
 import com.example.my_kinopoisk.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping("")
-    public ResponseEntity<GenreDto> saveGenre(@RequestBody GenreDto genreDto) {
-        return ResponseEntity.ok(genreService.saveGenreDto(genreDto));
+    public ResponseEntity<GenreViewDto> saveGenre(@RequestBody GenreViewDto genreViewDto) {
+        return ResponseEntity.ok(genreService.saveGenreDto(genreViewDto));
     }
 
     @GetMapping("")

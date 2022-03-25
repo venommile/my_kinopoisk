@@ -1,5 +1,7 @@
 package com.example.my_kinopoisk.controller;
 
+import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
+import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.dto.ShortMovieDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.service.BinderService;
@@ -27,13 +29,13 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovie(@PathVariable Long id) {
-        return ResponseEntity.ok(movieService.getMovie(id));
+    public ResponseEntity<MovieViewDto> getMovie(@PathVariable Long id) {
+        return ResponseEntity.ok(movieService.getMovieViewDto(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<ShortMovieDto> saveMovie(@RequestBody ShortMovieDto shortMovieDto) {
-        return ResponseEntity.ok(movieService.saveMovieDto(shortMovieDto));
+    public ResponseEntity<MovieViewDto> saveMovie(@RequestBody MovieCreateDto movieDto) {
+        return ResponseEntity.ok(movieService.saveMovieDto(movieDto));
     }
 
     @DeleteMapping("/{id}")

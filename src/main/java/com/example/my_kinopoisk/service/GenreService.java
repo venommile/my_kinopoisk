@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.service;
 
-import com.example.my_kinopoisk.domain.dto.GenreDto;
+import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.entities.Genre;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +25,9 @@ public class GenreService {
     }
 
 
-    public GenreDto saveGenreDto(GenreDto genreDto) {
-        //System.out.println(genreMapper.toEntity(genreDto).getTitle());
-        return genreMapper.toDto(genreRepository.save(genreMapper.toEntity(genreDto)));
+    public GenreViewDto saveGenreDto(GenreViewDto genreViewDto) {
+        //System.out.println(genreMapper.toEntity(genreViewDto).getTitle());
+        return genreMapper.toDto(genreRepository.save(genreMapper.toEntity(genreViewDto)));
     }
 
     public List<Genre> getGenres() {

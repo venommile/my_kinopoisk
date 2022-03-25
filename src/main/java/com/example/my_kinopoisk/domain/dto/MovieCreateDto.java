@@ -8,16 +8,15 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 @Data
-public class FullMovieDto implements Serializable {
-    private final Long id;
+public class MovieCreateDto implements Serializable {
     private final String title;
     @Min(0)
     private final Integer ageLimit;
     private final String countryOfProduction;
     private final String description;
     private final OffsetDateTime releaseDate;
-    private final Set<GenreDto> genres;
-    private final Set<ActorDto> actors;
-    private final Set<FilmCrewWorkerDto> filmCrews;
-    private final Set<RatingDto> ratings;
+    private final Set<GenreViewDto> genres;
+    private final Set<ActorCreateDto> actors;
+    private final Set<FilmCrewWorkerCreateDto> filmCrews;
+ //   private final Set<RatingDto> ratings;
 }
