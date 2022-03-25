@@ -1,5 +1,6 @@
 package com.example.my_kinopoisk.controller;
 
+import com.example.my_kinopoisk.domain.dto.PersonCreateDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entities.Person;
 import com.example.my_kinopoisk.domain.dto.PersonShortDto;
@@ -31,8 +32,8 @@ public class PersonController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Person> savePerson(@RequestBody Person person) {
-        return ResponseEntity.ok(PersonService.savePerson(person));
+    public ResponseEntity<PersonViewDto> savePerson(@RequestBody PersonCreateDto personDto) {
+        return ResponseEntity.ok(PersonService.savePerson(personDto));
     }
 
     @DeleteMapping("/{id}")

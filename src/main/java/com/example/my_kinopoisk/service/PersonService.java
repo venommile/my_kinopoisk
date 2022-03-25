@@ -1,5 +1,6 @@
 package com.example.my_kinopoisk.service;
 
+import com.example.my_kinopoisk.domain.dto.PersonCreateDto;
 import com.example.my_kinopoisk.domain.dto.PersonShortDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entities.ParticipantFilm;
@@ -18,6 +19,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonShortMapper personShortMapper;
     private final PersonViewMapper personViewMapper;
+    private final PersonCreateMapper personCreateMapper;
 
 
     public List<Person> getPersons() {
@@ -31,8 +33,19 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
-    public Person savePerson(Person person) {
-        return personRepository.save(person);
+    public PersonViewDto savePerson(PersonCreateDto personCreateDto) {
+        var foundPerson = personRepository.findByNameAndSurname(personCreateDto.getName(), personCreateDto.getSurname());
+
+        if (foundPerson.isEmpty())
+            return personViewMapper.toDto(
+                personRepository.save(personCreateMapper.toEntity(personCreateDto))
+            );
+        var person = personCreateMapper.toEntity(personCreateDto);
+        person.setId(foundPerson.get().getId());
+        return personViewMapper.toDto(
+            personRepository.save(person)
+        );
+
     }
 
     public PersonViewDto getPerson(Long id) {
@@ -45,18 +58,15 @@ public class PersonService {
         return getPersons().stream().map(personShortMapper::toDto).collect(Collectors.toList());
     }
 
-    public Person savePersonIfExists(ParticipantFilm participant){
+    public Person savePersonIfExists(ParticipantFilm participant) {
         Person p = new Person();//УБРАТЬ
         p.setName(participant.getName());
         p.setSurname(participant.getSurname());
-        return personRepository.findByNameAndSurname(
-            participant.getName(), participant.getSurname()
-        ).orElse(
-
-
-            personRepository.save(p
-
-            )
-        );
+        var foundPerson =  personRepository.findByNameAndSurname(
+            participant.getName(), participant.getSurname());
+        if (foundPerson.isEmpty()){
+            return personRepository.save(p);
+        }
+        return foundPerson.get();
     }
 }

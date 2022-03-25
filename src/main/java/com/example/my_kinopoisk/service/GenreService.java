@@ -48,8 +48,14 @@ public class GenreService {
     public Set<Genre> saveAndBindGenres(Set<Genre> genres) {
         Set<Genre> saveGenres = new HashSet<>();
         for (var genre : genres) {
-            saveGenres.add(genreRepository.findByTitle(
-                genre.getTitle()).orElse(genreRepository.save(genre)));
+            var foundGenre = genreRepository.findByTitle(
+                genre.getTitle());
+            if (foundGenre.isEmpty()){
+                saveGenres.add(genreRepository.save(genre));
+            }
+            else{
+                saveGenres.add(foundGenre.get());
+            }
         }
         return saveGenres;
     }

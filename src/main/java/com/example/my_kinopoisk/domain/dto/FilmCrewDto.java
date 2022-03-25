@@ -12,5 +12,5 @@ public class FilmCrewDto implements Serializable {
     private final String name;
     private final String surname;
     private final String role;
-    private final MovieShortDto movie;
+    private final MovieShortDto movie;// To do participant view dto
 }

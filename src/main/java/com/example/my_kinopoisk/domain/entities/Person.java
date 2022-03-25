@@ -50,7 +50,7 @@ public class Person {
 
     private List<FilmCrew> filmCrewRoles = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons")
     private Set<Genre> genres = new HashSet<>();
 
 
