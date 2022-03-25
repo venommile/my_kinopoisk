@@ -18,5 +18,4 @@ public class MovieInListDto implements Serializable {
     private String title;
     private Integer ageLimit;
     private String countryOfProduction;
-    private String description;
 }
