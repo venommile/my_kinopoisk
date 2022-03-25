@@ -9,7 +9,6 @@ import java.sql.Date;
 
 @Data
 public class PersonCreateDto implements Serializable {
-    private final Long id;
     @NotNull
     private final String name;
     @NotNull

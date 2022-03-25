@@ -36,10 +36,14 @@ public class PersonService {
     public PersonViewDto savePerson(PersonCreateDto personCreateDto) {
         var foundPerson = personRepository.findByNameAndSurname(personCreateDto.getName(), personCreateDto.getSurname());
 
-        if (foundPerson.isEmpty())
+        if (foundPerson.isEmpty()) {
+//            var mPerson = ;
+//            mPerson.setActorRoles(mPerson.getActorRoles());//to Eager
+//            mPerson.setFilmCrewRoles(mPerson.getFilmCrewRoles());
             return personViewMapper.toDto(
-                personRepository.save(personCreateMapper.toEntity(personCreateDto))
+                personRepository.save(personRepository.save(personCreateMapper.toEntity(personCreateDto)))
             );
+        }
         var person = personCreateMapper.toEntity(personCreateDto);
         person.setId(foundPerson.get().getId());
         return personViewMapper.toDto(

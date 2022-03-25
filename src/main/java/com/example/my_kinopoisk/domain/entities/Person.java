@@ -42,13 +42,11 @@ public class Person {
     private Gender gender;
 
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
+    private Set<Actor> actorRoles = new HashSet<>();
 
-    private List<Actor> actorRoles = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-
-    private List<FilmCrew> filmCrewRoles = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
+    private Set<FilmCrew> filmCrewRoles = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons")
     private Set<Genre> genres = new HashSet<>();

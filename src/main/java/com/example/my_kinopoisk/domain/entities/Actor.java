@@ -31,7 +31,7 @@ public class Actor implements ParticipantFilm{
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Person person;
 
 }

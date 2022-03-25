@@ -12,4 +12,5 @@ public class ActorInMovieDto implements Serializable {
     private final String name;
     private final String surname;
     private final String role;
+
 }

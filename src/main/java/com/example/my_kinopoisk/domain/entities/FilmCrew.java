@@ -28,7 +28,7 @@ public class FilmCrew implements ParticipantFilm{
     private String role;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Person person;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Movie movie;
