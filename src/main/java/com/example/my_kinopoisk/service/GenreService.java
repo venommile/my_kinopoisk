@@ -2,6 +2,7 @@ package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.entities.Genre;
+import com.example.my_kinopoisk.domain.entities.GenreCreateDto;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.stream.StreamSupport;
 public class GenreService {
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
+    private final GenreCreateMapper genreCreateMapper;
 
     public Genre saveGenre(Genre genre) {
         return genreRepository.save(genre);
@@ -27,9 +29,9 @@ public class GenreService {
     }
 
 
-    public GenreViewDto saveGenreDto(GenreViewDto genreViewDto) {
+    public GenreViewDto saveGenreDto(GenreCreateDto genreCreateDto) {
         //System.out.println(genreMapper.toEntity(genreViewDto).getTitle());
-        return genreMapper.toDto(genreRepository.save(genreMapper.toEntity(genreViewDto)));
+        return genreMapper.toDto(genreRepository.save(genreCreateMapper.toEntity(genreCreateDto)));
     }
 
     public List<Genre> getGenres() {

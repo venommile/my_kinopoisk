@@ -1,7 +1,7 @@
 package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.PersonCreateDto;
-import com.example.my_kinopoisk.domain.dto.PersonShortDto;
+import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entities.ParticipantFilm;
 import com.example.my_kinopoisk.domain.entities.Person;
@@ -17,7 +17,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
-    private final PersonShortMapper personShortMapper;
+    private final PersonInListMapper personInListMapper;
     private final PersonViewMapper personViewMapper;
     private final PersonCreateMapper personCreateMapper;
 
@@ -54,8 +54,8 @@ public class PersonService {
         );
     }
 
-    public List<PersonShortDto> getPersonsOnlyDto() {
-        return getPersons().stream().map(personShortMapper::toDto).collect(Collectors.toList());
+    public List<PersonInListDto> getPersonsOnlyDto() {
+        return getPersons().stream().map(personInListMapper::toDto).collect(Collectors.toList());
     }
 
     public Person savePersonIfExists(ParticipantFilm participant) {

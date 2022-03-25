@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class PersonShortDto implements Serializable {
+public class PersonInListDto implements Serializable {
     private final Long id;
     @NotNull
     private final String name;

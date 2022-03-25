@@ -2,6 +2,7 @@ package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.entities.Genre;
+import com.example.my_kinopoisk.domain.entities.GenreCreateDto;
 import com.example.my_kinopoisk.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class GenreController {
     private final GenreService genreService;
 
     @PostMapping("")
-    public ResponseEntity<GenreViewDto> saveGenre(@RequestBody GenreViewDto genreViewDto) {
-        return ResponseEntity.ok(genreService.saveGenreDto(genreViewDto));
+    public ResponseEntity<GenreViewDto> saveGenre(@RequestBody GenreCreateDto genreCreateDto) {
+        return ResponseEntity.ok(genreService.saveGenreDto(genreCreateDto));
     }
 
     @GetMapping("")

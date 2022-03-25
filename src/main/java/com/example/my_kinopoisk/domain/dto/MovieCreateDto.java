@@ -1,5 +1,6 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import com.example.my_kinopoisk.domain.entities.GenreCreateDto;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -15,8 +16,8 @@ public class MovieCreateDto implements Serializable {
     private final String countryOfProduction;
     private final String description;
     private final OffsetDateTime releaseDate;
-    private final Set<GenreViewDto> genres;
+    private final Set<GenreCreateDto> genres;
     private final Set<ActorCreateDto> actors;
     private final Set<FilmCrewCreateDto> filmCrews;
- //   private final Set<RatingDto> ratings;
+    //   private final Set<RatingDto> ratings;
 }

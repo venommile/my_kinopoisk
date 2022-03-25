@@ -1,7 +1,7 @@
 package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
-import com.example.my_kinopoisk.domain.dto.MovieShortDto;
+import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.service.BinderService;
@@ -24,7 +24,7 @@ public class MovieController {
     private final MovieService movieService;
     private final BinderService binderService;
     @GetMapping("")
-    public ResponseEntity<Iterable<MovieShortDto>> getMovies() {
+    public ResponseEntity<Iterable<MovieInListDto>> getMovies() {
         return ResponseEntity.ok(movieService.getMoviesOnlyDto());
     }
 
