@@ -1,8 +1,8 @@
 package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
+import com.example.my_kinopoisk.domain.dto.MovieShortDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
-import com.example.my_kinopoisk.domain.dto.ShortMovieDto;
 import com.example.my_kinopoisk.domain.entities.Movie;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,9 @@ public class MovieService {
     private final MovieShortMapper movieShortMapper;
     private final MovieViewMapper movieViewMapper;
     private final MovieCreateMapper movieCreateMapper;
+    private final GenreService genreService;
+    private final ActorService actorService;
+    private final FilmCrewService filmCrewService;
 
     public List<Movie> getMovies() {
         return StreamSupport.stream(
@@ -28,9 +31,8 @@ public class MovieService {
     }
 
     public MovieViewDto getMovieViewDto(Long id) {
-        var t =  movieRepository.findById(id).orElseThrow(() -> new RuntimeException("not found"));
         return movieViewMapper.toDto(
-           t
+            movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie with this id not found"))
         );
     }
 
@@ -43,19 +45,38 @@ public class MovieService {
     }
 
 
-    public ShortMovieDto saveMovieDto(ShortMovieDto shortMovieDto) {
+    public MovieShortDto saveMovieDto(MovieShortDto movieShortDto) {
+
         return movieShortMapper.toDto(
             movieRepository.save(
-                movieShortMapper.toEntity(shortMovieDto)
+                movieShortMapper.toEntity(movieShortDto)
             )
         );
     }
 
     public MovieViewDto saveMovieDto(MovieCreateDto movieDto) {
+        var movie = movieCreateMapper.toEntity(movieDto);
+        movie.setFilmCrews(
+            filmCrewService.saveAndBindPerson(
+                movie.getFilmCrews()
+            )
+        );
+        movie.setActors(
+            actorService.saveAndBindPerson(
+                movie.getActors()
+            )
+        );
+        movie.setGenres(
+            genreService.saveAndBindGenres(
+                movie.getGenres()
+            )
+        );
+        movie.getGenres().forEach(genre -> genre.addMovie(movie));//Ужасно((
+        movie.getActors().forEach(actor -> actor.setMovie(movie));
+        movie.getFilmCrews().forEach(crew -> crew.setMovie(movie));
         return movieViewMapper.toDto(
-            movieRepository.save(
-                movieCreateMapper.toEntity(movieDto)
-            ));
+            movieRepository.save(movie)
+        );
     }
 
 
@@ -64,7 +85,7 @@ public class MovieService {
     }
 
 
-    public List<ShortMovieDto> getMoviesOnlyDto() {
+    public List<MovieShortDto> getMoviesOnlyDto() {
         return getMovies().stream().map(movieShortMapper::toDto).collect(Collectors.toList());
     }
 

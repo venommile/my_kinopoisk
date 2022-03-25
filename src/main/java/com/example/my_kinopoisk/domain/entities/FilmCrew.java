@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
-public class FilmCrewWorker {
+public class FilmCrew implements ParticipantFilm{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -1,5 +1,8 @@
 package com.example.my_kinopoisk.service;
 
+import com.example.my_kinopoisk.domain.dto.PersonShortDto;
+import com.example.my_kinopoisk.domain.dto.PersonViewDto;
+import com.example.my_kinopoisk.domain.entities.ParticipantFilm;
 import com.example.my_kinopoisk.domain.entities.Person;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,10 @@ import java.util.stream.StreamSupport;
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
+    private final PersonShortMapper personShortMapper;
+    private final PersonViewMapper personViewMapper;
+
+
     public List<Person> getPersons() {
 
         return StreamSupport.stream(
@@ -28,7 +35,28 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Person getPerson(Long id) {
-        return personRepository.findById(id).orElseThrow();
+    public PersonViewDto getPerson(Long id) {
+        return personViewMapper.toDto(
+            personRepository.findById(id).orElseThrow()
+        );
+    }
+
+    public List<PersonShortDto> getPersonsOnlyDto() {
+        return getPersons().stream().map(personShortMapper::toDto).collect(Collectors.toList());
+    }
+
+    public Person savePersonIfExists(ParticipantFilm participant){
+        Person p = new Person();//УБРАТЬ
+        p.setName(participant.getName());
+        p.setSurname(participant.getSurname());
+        return personRepository.findByNameAndSurname(
+            participant.getName(), participant.getSurname()
+        ).orElse(
+
+
+            personRepository.save(p
+
+            )
+        );
     }
 }

@@ -6,7 +6,9 @@ import com.example.my_kinopoisk.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -34,11 +36,21 @@ public class GenreService {
         return StreamSupport.stream(
             genreRepository
                 .findAll()
-                .spliterator() ,false).collect(Collectors.toList());
+                .spliterator(), false).collect(Collectors.toList());
     }
 
 
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
+    }
+
+
+    public Set<Genre> saveAndBindGenres(Set<Genre> genres) {
+        Set<Genre> saveGenres = new HashSet<>();
+        for (var genre : genres) {
+            saveGenres.add(genreRepository.findByTitle(
+                genre.getTitle()).orElse(genreRepository.save(genre)));
+        }
+        return saveGenres;
     }
 }

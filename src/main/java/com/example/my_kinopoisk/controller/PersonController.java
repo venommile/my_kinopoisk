@@ -1,7 +1,8 @@
 package com.example.my_kinopoisk.controller;
 
-import com.example.my_kinopoisk.domain.entities.Actor;
+import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entities.Person;
+import com.example.my_kinopoisk.domain.dto.PersonShortDto;
 import com.example.my_kinopoisk.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,12 @@ public class PersonController {
     private final PersonService PersonService;
 
     @GetMapping("")
-
-    public ResponseEntity<Iterable<Person>> getPersons() {
-        return ResponseEntity.ok(PersonService.getPersons());
+    public ResponseEntity<Iterable<PersonShortDto>> getPersons() {
+        return ResponseEntity.ok(PersonService.getPersonsOnlyDto());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Person> getPerson(@PathVariable Long id) {
+    public ResponseEntity<PersonViewDto> getPerson(@PathVariable Long id) {
         return ResponseEntity.ok(PersonService.getPerson(id));
     }
 

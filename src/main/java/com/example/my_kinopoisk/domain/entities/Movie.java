@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Min;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -46,7 +45,7 @@ public class Movie {
 
 
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<FilmCrewWorker> filmCrews = new HashSet<>();
+    private Set<FilmCrew> filmCrews = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -65,7 +64,7 @@ public class Movie {
         ratings.add(rating);
     }
 
-    public void addFilmCrew(FilmCrewWorker filmCrew) {
+    public void addFilmCrew(FilmCrew filmCrew) {
         filmCrews.add(filmCrew);
     }
 

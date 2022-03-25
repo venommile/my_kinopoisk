@@ -1,14 +1,16 @@
 package com.example.my_kinopoisk.domain.entities;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,6 +25,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(uniqueConstraints =
 @UniqueConstraint(name = "FullName", columnNames = {"name", "surname"}))
 public class Person {
@@ -40,13 +43,14 @@ public class Person {
 
 
     @OneToMany(fetch = FetchType.LAZY)
+
     private List<Actor> actorRoles = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
 
-    private List<FilmCrewWorker> filmCrewRoles = new ArrayList<>();
+    private List<FilmCrew> filmCrewRoles = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "persons",fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Genre> genres = new HashSet<>();
 
 

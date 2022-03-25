@@ -17,6 +17,6 @@ public class MovieCreateDto implements Serializable {
     private final OffsetDateTime releaseDate;
     private final Set<GenreViewDto> genres;
     private final Set<ActorCreateDto> actors;
-    private final Set<FilmCrewWorkerCreateDto> filmCrews;
+    private final Set<FilmCrewCreateDto> filmCrews;
  //   private final Set<RatingDto> ratings;
 }
