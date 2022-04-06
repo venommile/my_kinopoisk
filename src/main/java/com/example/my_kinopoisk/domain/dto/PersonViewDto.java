@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.domain.dto;
 
-import com.example.my_kinopoisk.domain.entities.Gender;
+import com.example.my_kinopoisk.domain.entity.Gender;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

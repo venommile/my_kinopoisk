@@ -1,4 +1,4 @@
-package com.example.my_kinopoisk.domain.entities;
+package com.example.my_kinopoisk.domain.entity;
 
 public interface ParticipantFilm {
 

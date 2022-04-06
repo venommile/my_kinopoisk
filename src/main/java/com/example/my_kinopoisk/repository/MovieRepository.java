@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.repository;
 
-import com.example.my_kinopoisk.domain.entities.Movie;
+import com.example.my_kinopoisk.domain.entity.Movie;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

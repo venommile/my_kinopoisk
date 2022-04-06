@@ -1,6 +1,5 @@
 package com.example.my_kinopoisk.domain.dto;
 
-import com.example.my_kinopoisk.domain.entities.MoviePersonPageDto;
 import lombok.Data;
 
 import java.io.Serializable;

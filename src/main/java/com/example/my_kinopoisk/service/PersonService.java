@@ -3,9 +3,10 @@ package com.example.my_kinopoisk.service;
 import com.example.my_kinopoisk.domain.dto.PersonCreateDto;
 import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
-import com.example.my_kinopoisk.domain.entities.ParticipantFilm;
-import com.example.my_kinopoisk.domain.entities.Person;
+import com.example.my_kinopoisk.domain.entity.ParticipantFilm;
+import com.example.my_kinopoisk.domain.entity.Person;
 import com.example.my_kinopoisk.repository.PersonRepository;
+import com.example.my_kinopoisk.service.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
-    private final PersonInListMapper personInListMapper;
-    private final PersonViewMapper personViewMapper;
-    private final PersonCreateMapper personCreateMapper;
+    private final PersonMapper personMapper;
 
 
     public List<Person> getPersons() {
@@ -33,44 +32,31 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
-    public PersonViewDto savePerson(PersonCreateDto personCreateDto) {
-        var foundPerson = personRepository.findByNameAndSurname(personCreateDto.getName(), personCreateDto.getSurname());
-
-        if (foundPerson.isEmpty()) {
-//            var mPerson = ;
-//            mPerson.setActorRoles(mPerson.getActorRoles());//to Eager
-//            mPerson.setFilmCrewRoles(mPerson.getFilmCrewRoles());
-            return personViewMapper.toDto(
-                personRepository.save(personRepository.save(personCreateMapper.toEntity(personCreateDto)))
-            );
-        }
-        var person = personCreateMapper.toEntity(personCreateDto);
-        person.setId(foundPerson.get().getId());
-        return personViewMapper.toDto(
+    public PersonViewDto savePerson(PersonCreateDto personDto) {
+        var foundPerson = personRepository.findByNameAndSurname(personDto.getName(), personDto.getSurname());
+        var person = personMapper.toEntity(personDto);
+        person.setId(foundPerson.map(Person::getId).orElse(null));
+        return personMapper.toViewDto(
             personRepository.save(person)
         );
-
     }
 
     public PersonViewDto getPerson(Long id) {
-        return personViewMapper.toDto(
+        return personMapper.toViewDto(
             personRepository.findById(id).orElseThrow()
         );
     }
 
     public List<PersonInListDto> getPersonsOnlyDto() {
-        return getPersons().stream().map(personInListMapper::toDto).collect(Collectors.toList());
+        return getPersons().stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
     }
 
     public Person savePersonIfExists(ParticipantFilm participant) {
-        Person p = new Person();//УБРАТЬ
-        p.setName(participant.getName());
-        p.setSurname(participant.getSurname());
-        var foundPerson =  personRepository.findByNameAndSurname(
-            participant.getName(), participant.getSurname());
-        if (foundPerson.isEmpty()){
-            return personRepository.save(p);
-        }
-        return foundPerson.get();
+        return personRepository.findByNameAndSurname(participant.getName(), participant.getSurname())
+            .orElseGet(
+                () -> personRepository.save(
+                    new Person(participant)
+                )
+            );
     }
 }

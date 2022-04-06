@@ -1,6 +1,5 @@
-package com.example.my_kinopoisk.domain.entities;
+package com.example.my_kinopoisk.domain.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

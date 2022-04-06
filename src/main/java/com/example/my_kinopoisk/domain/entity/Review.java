@@ -1,4 +1,4 @@
-package com.example.my_kinopoisk.domain.entities;
+package com.example.my_kinopoisk.domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
