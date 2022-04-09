@@ -8,6 +8,8 @@ import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +28,15 @@ public class MovieService {
     private final ActorService actorService;
     private final FilmCrewService filmCrewService;
 
-    public List<Movie> getMovies() {
+    public List<Movie> getMovies(Pageable pageable) {
         return StreamSupport.stream(
-                movieRepository.findAll().spliterator(),
-                false).collect(Collectors.toList());
+            movieRepository.findAll(pageable).spliterator(),
+            false).collect(Collectors.toList());
     }
 
     public MovieViewDto getMovieViewDto(Long id) {
         return movieMapper.toViewDto(
-                getMovie(id)
+            getMovie(id)
         );
     }
 
@@ -50,9 +52,9 @@ public class MovieService {
     public MovieInListDto saveMovieDto(MovieInListDto movieInListDto) {
 
         return movieMapper.toInListDto(
-                saveMovie(
-                        movieMapper.toEntity(movieInListDto)
-                )
+            saveMovie(
+                movieMapper.toEntity(movieInListDto)
+            )
         );
     }
 
@@ -60,25 +62,25 @@ public class MovieService {
     public MovieViewDto saveMovieDto(MovieCreateDto movieDto) {
         var movie = movieMapper.toEntity(movieDto);
         movie.setFilmCrews(
-                filmCrewService.saveAndBindPerson(
-                        movie.getFilmCrews()
-                )
+            filmCrewService.saveAndBindPerson(
+                movie.getFilmCrews()
+            )
         );
         movie.setActors(
-                actorService.saveAndBindPerson(
-                        movie.getActors()
-                )
+            actorService.saveAndBindPerson(
+                movie.getActors()
+            )
         );
         movie.setGenres(
-                genreService.saveAndBindGenres(
-                        movie.getGenres()
-                )
+            genreService.saveAndBindGenres(
+                movie.getGenres()
+            )
         );
-        movie.getGenres().forEach(genre -> genre.addMovie(movie));//Ужасно((
+        movie.getGenres().forEach(genre -> genre.addMovie(movie));
         movie.getActors().forEach(actor -> actor.setMovie(movie));
         movie.getFilmCrews().forEach(crew -> crew.setMovie(movie));
         return movieMapper.toViewDto(
-                saveMovie(movie)
+            saveMovie(movie)
         );
     }
 
@@ -89,8 +91,8 @@ public class MovieService {
     }
 
 
-    public List<MovieInListDto> getMoviesOnlyDto() {
-        return getMovies().stream().map(movieMapper::toInListDto).collect(Collectors.toList());
+    public List<MovieInListDto> getMoviesInListDto(Pageable pageable) {
+        return getMovies(pageable).stream().map(movieMapper::toInListDto).collect(Collectors.toList());
     }
 
 

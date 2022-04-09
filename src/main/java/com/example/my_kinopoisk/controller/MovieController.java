@@ -7,6 +7,10 @@ import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +28,8 @@ public class MovieController {
     private final MovieService movieService;
     private final BinderService binderService;
     @GetMapping("")
-    public ResponseEntity<Iterable<MovieInListDto>> getMovies() {
-        return ResponseEntity.ok(movieService.getMoviesOnlyDto());
+    public Page<MovieInListDto> getMovies(@ParameterObject Pageable pageable) {
+        return new PageImpl<>(movieService.getMoviesInListDto(pageable));
     }
 
     @GetMapping("/{id}")

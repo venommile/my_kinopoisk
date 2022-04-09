@@ -9,6 +9,7 @@ import com.example.my_kinopoisk.exception.PersonNotFoundException;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public class PersonService {
     private final PersonMapper personMapper;
 
 
-    public List<Person> getPersons() {
-
+    public List<Person> getPersons(Pageable pageable) {
         return StreamSupport.stream(
-            personRepository.findAll().spliterator(),
+            personRepository
+                .findAll(pageable)
+                .spliterator(),
             false).collect(Collectors.toList());
     }
 
@@ -53,8 +55,8 @@ public class PersonService {
         return personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 
-    public List<PersonInListDto> getPersonsOnlyDto() {
-        return getPersons().stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
+    public List<PersonInListDto> getPersonsOnlyDto(Pageable pageable) {
+        return getPersons(pageable).stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
     }
 
     public Person savePersonIfExists(ParticipantFilm participant) {

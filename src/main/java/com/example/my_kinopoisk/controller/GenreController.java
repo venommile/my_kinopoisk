@@ -4,6 +4,8 @@ import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.dto.GenreCreateDto;
 import com.example.my_kinopoisk.service.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +29,8 @@ public class GenreController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable<GenreViewDto>> getGenres() {
-        return ResponseEntity.ok(genreService.getGenres());
+    public Page<GenreViewDto> getGenres(@ParameterObject Pageable pageable) {
+        return new PageImpl<>(genreService.getGenresListDto(pageable));
     }
 
     @DeleteMapping("/{id}")

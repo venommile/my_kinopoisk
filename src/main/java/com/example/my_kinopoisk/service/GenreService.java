@@ -7,6 +7,9 @@ import com.example.my_kinopoisk.exception.GenreNotFoundException;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -34,10 +37,10 @@ public class GenreService {
         return genreMapper.toViewDto(saveGenre(genreMapper.toEntity(genreCreateDto)));
     }
 
-    public List<GenreViewDto> getGenres() {
+    public List<GenreViewDto> getGenresListDto(Pageable pageable) {
         return StreamSupport.stream(
             genreRepository
-                .findAll()
+                .findAll(pageable)
                 .spliterator(), false).map(genreMapper::toViewDto).collect(Collectors.toList());
     }
 
