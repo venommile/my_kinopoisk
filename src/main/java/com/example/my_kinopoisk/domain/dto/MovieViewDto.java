@@ -1,13 +1,17 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class MovieViewDto implements Serializable {
     private final Long id;
     private final String title;

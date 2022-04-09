@@ -9,9 +9,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
-@Builder
-@NoArgsConstructor
+
+@Getter
 @AllArgsConstructor
 public class GenreViewDto implements Serializable {
     private Long id;

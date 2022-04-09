@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class MovieInListDto implements Serializable {
     private Long id;
     private String title;

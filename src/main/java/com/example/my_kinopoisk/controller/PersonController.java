@@ -27,7 +27,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonViewDto> getPerson(@PathVariable Long id) {
-        return ResponseEntity.ok(PersonService.getPerson(id));
+        return ResponseEntity.ok(PersonService.getPersonDto(id));
     }
 
     @PostMapping("")

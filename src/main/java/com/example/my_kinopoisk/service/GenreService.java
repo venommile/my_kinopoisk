@@ -1,8 +1,9 @@
 package com.example.my_kinopoisk.service;
 
+import com.example.my_kinopoisk.domain.dto.GenreCreateDto;
 import com.example.my_kinopoisk.domain.dto.GenreViewDto;
 import com.example.my_kinopoisk.domain.entity.Genre;
-import com.example.my_kinopoisk.domain.dto.GenreCreateDto;
+import com.example.my_kinopoisk.exception.GenreNotFoundException;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,12 @@ public class GenreService {
     }
 
     public Genre getGenre(Long id) {
-        return genreRepository.findById(id).orElseThrow();
+        return genreRepository.findById(id).orElseThrow(GenreNotFoundException::new);
     }
 
 
     public GenreViewDto saveGenreDto(GenreCreateDto genreCreateDto) {
-        //System.out.println(genreMapper.toEntity(genreViewDto).getTitle());
-        return genreMapper.toViewDto(genreRepository.save(genreMapper.toEntity(genreCreateDto)));
+        return genreMapper.toViewDto(saveGenre(genreMapper.toEntity(genreCreateDto)));
     }
 
     public List<GenreViewDto> getGenres() {
@@ -43,6 +43,7 @@ public class GenreService {
 
 
     public void deleteGenre(Long id) {
+        getGenre(id);
         genreRepository.deleteById(id);
     }
 
@@ -52,12 +53,7 @@ public class GenreService {
         for (var genre : genres) {
             var foundGenre = genreRepository.findByTitle(
                 genre.getTitle());
-            if (foundGenre.isEmpty()){
-                saveGenres.add(genreRepository.save(genre));
-            }
-            else{
-                saveGenres.add(foundGenre.get());
-            }
+            saveGenres.add(foundGenre.orElseGet(() -> genreRepository.save(genre)));
         }
         return saveGenres;
     }

@@ -9,9 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
 public class GenreCreateDto implements Serializable {
     @NotNull
     private  String title;

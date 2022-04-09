@@ -5,6 +5,7 @@ import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entity.ParticipantFilm;
 import com.example.my_kinopoisk.domain.entity.Person;
+import com.example.my_kinopoisk.exception.PersonNotFoundException;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class PersonService {
     }
 
     public void deletePerson(Long id) {
+        getPerson(id);
         personRepository.deleteById(id);
     }
 
@@ -41,10 +43,14 @@ public class PersonService {
         );
     }
 
-    public PersonViewDto getPerson(Long id) {
+    public PersonViewDto getPersonDto(Long id) {
         return personMapper.toViewDto(
-            personRepository.findById(id).orElseThrow()
+            getPerson(id)
         );
+    }
+
+    public Person getPerson(Long id) {
+        return personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 
     public List<PersonInListDto> getPersonsOnlyDto() {

@@ -1,11 +1,14 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Data
-
+@AllArgsConstructor
+@Getter
 public class FilmCrewMovieViewDto {
 
     private final Long id;

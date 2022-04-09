@@ -4,6 +4,7 @@ import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
+import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,12 @@ public class MovieService {
 
     public MovieViewDto getMovieViewDto(Long id) {
         return movieMapper.toViewDto(
-                movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie with this id not found"))
+                getMovie(id)
         );
     }
 
     public Movie getMovie(Long id) {
-        return movieRepository.findById(id).orElseThrow();
+        return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
     public Movie saveMovie(Movie movie) {
@@ -49,7 +50,7 @@ public class MovieService {
     public MovieInListDto saveMovieDto(MovieInListDto movieInListDto) {
 
         return movieMapper.toInListDto(
-                movieRepository.save(
+                saveMovie(
                         movieMapper.toEntity(movieInListDto)
                 )
         );
@@ -77,12 +78,13 @@ public class MovieService {
         movie.getActors().forEach(actor -> actor.setMovie(movie));
         movie.getFilmCrews().forEach(crew -> crew.setMovie(movie));
         return movieMapper.toViewDto(
-                movieRepository.save(movie)
+                saveMovie(movie)
         );
     }
 
 
     public void deleteMovie(Long id) {
+        getMovie(id);
         movieRepository.deleteById(id);
     }
 

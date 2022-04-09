@@ -1,11 +1,16 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class ActorInMovieDto implements Serializable {
     private final Long id;
     @NotNull
