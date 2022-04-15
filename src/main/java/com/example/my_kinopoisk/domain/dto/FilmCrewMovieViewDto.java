@@ -1,16 +1,16 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @AllArgsConstructor
 @Getter
 public class FilmCrewMovieViewDto {
-
+    @Null(groups = OnCreate.class)
     private final Long id;
     @NotNull
     private final String name;

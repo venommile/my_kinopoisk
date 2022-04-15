@@ -5,8 +5,13 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
+
+/*
+
+//оставил PersonCreate, потому часть логики состоит в том,что Person сам создаётся и подгружает зависимости
+ */
 @Data
 public class PersonCreateDto implements Serializable {
     @NotNull

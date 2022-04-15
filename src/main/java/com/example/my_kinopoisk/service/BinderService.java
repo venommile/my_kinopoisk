@@ -14,7 +14,7 @@ public class BinderService {
     private final GenreService genreService;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Movie bindMovieGenre(Long movieId, Long genreId){
+    public Movie bindMovieGenre(Long movieId, Long genreId) {
         var movie = movieService.getMovie(movieId);
         var genre = genreService.getGenre(genreId);
         movie.addGenre(genre);

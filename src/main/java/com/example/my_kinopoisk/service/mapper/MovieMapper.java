@@ -12,12 +12,15 @@ import org.mapstruct.Mapper;
 public interface MovieMapper {
 
     MovieCreateDto toCreateDto(Movie movie);
+
     Movie toEntity(MovieCreateDto movieCreateDto);
 
     MovieInListDto toInListDto(Movie movie);
+
     Movie toEntity(MovieInListDto movieInListDto);
 
     Movie toEntity(MoviePersonPageDto moviePersonPageDto);
+
     MoviePersonPageDto toInPersonPageDto(Movie movie);
 
     MovieViewDto toViewDto(Movie movie);

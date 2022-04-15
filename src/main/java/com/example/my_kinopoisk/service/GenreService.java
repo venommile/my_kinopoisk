@@ -1,14 +1,11 @@
 package com.example.my_kinopoisk.service;
 
-import com.example.my_kinopoisk.domain.dto.GenreCreateDto;
-import com.example.my_kinopoisk.domain.dto.GenreViewDto;
+import com.example.my_kinopoisk.domain.dto.GenreDto;
 import com.example.my_kinopoisk.domain.entity.Genre;
 import com.example.my_kinopoisk.exception.GenreNotFoundException;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,15 +30,11 @@ public class GenreService {
     }
 
 
-    public GenreViewDto saveGenreDto(GenreCreateDto genreCreateDto) {
-        return genreMapper.toViewDto(saveGenre(genreMapper.toEntity(genreCreateDto)));
-    }
-
-    public List<GenreViewDto> getGenresListDto(Pageable pageable) {
+    public List<GenreDto> getGenresListDto(Pageable pageable) {
         return StreamSupport.stream(
             genreRepository
                 .findAll(pageable)
-                .spliterator(), false).map(genreMapper::toViewDto).collect(Collectors.toList());
+                .spliterator(), false).map(genreMapper::toDto).collect(Collectors.toList());
     }
 
 

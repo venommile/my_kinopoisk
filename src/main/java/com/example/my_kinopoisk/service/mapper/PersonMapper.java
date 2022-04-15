@@ -10,9 +10,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PersonMapper {
     Person toEntity(PersonCreateDto personCreateDto);
+
     PersonCreateDto toCreateDto(Person person);
 
     PersonInListDto toPersonInListDto(Person person);
+
     Person toEntity(PersonInListDto personInListDto);
 
     PersonViewDto toViewDto(Person person);

@@ -1,18 +1,17 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 
 
 @Getter
 @AllArgsConstructor
-public class GenreViewDto implements Serializable {
+public class GenreDto implements Serializable {
+    @Null(groups = OnCreate.class)
     private Long id;
     private String title;
 }

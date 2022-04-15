@@ -1,10 +1,9 @@
 package com.example.my_kinopoisk.domain.entity;
 
-import lombok.Builder;
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +30,7 @@ import java.util.Set;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Null(groups = OnCreate.class)
     private Long id;
     @NotNull
     private String name;
@@ -39,22 +40,17 @@ public class Person {
     private Float height;
     private Date birthday;
     private Gender gender;
-
-    public Person(ParticipantFilm participant){
-        name = participant.getName();
-        surname = participant.getSurname();
-    }
-
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
     private Set<Actor> actorRoles = new HashSet<>();
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
     private Set<FilmCrew> filmCrewRoles = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons")
     private Set<Genre> genres = new HashSet<>();
 
+    public Person(ParticipantFilm participant) {
+        name = participant.getName();
+        surname = participant.getSurname();
+    }
 
 
 }

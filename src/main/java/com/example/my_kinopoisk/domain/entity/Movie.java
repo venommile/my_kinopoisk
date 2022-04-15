@@ -1,10 +1,11 @@
 package com.example.my_kinopoisk.domain.entity;
 
 
-
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Null;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,7 @@ import java.util.Set;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Null(groups = OnCreate.class)
     private Long id;
     private String title;
     @Min(0)
@@ -40,16 +43,17 @@ public class Movie {
     private Set<Genre> genres = new HashSet<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Actor> actors = new HashSet<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FilmCrew> filmCrews = new HashSet<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Rating> ratings = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//
+//    private Set<Rating> ratings = new HashSet<>();
 
 
     public void addGenre(Genre genre) {
@@ -60,9 +64,9 @@ public class Movie {
         actors.add(actor);
     }
 
-    public void addRating(Rating rating) {
-        ratings.add(rating);
-    }
+//    public void addRating(Rating rating) {
+//        ratings.add(rating);
+//    }
 
     public void addFilmCrew(FilmCrew filmCrew) {
         filmCrews.add(filmCrew);

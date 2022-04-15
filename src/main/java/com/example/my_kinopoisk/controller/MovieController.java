@@ -6,12 +6,14 @@ import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/movies")
 public class MovieController {
     private final MovieService movieService;
     private final BinderService binderService;
+
     @GetMapping("")
     public Page<MovieInListDto> getMovies(@ParameterObject Pageable pageable) {
         return new PageImpl<>(movieService.getMoviesInListDto(pageable));
@@ -38,7 +44,8 @@ public class MovieController {
     }
 
     @PostMapping("")
-    public ResponseEntity<MovieViewDto> saveMovie(@RequestBody MovieCreateDto movieDto) {
+    @Validated(OnCreate.class)
+    public ResponseEntity<MovieViewDto> saveMovie(@Valid @RequestBody MovieCreateDto movieDto) {
         return ResponseEntity.ok(movieService.saveMovieDto(movieDto));
     }
 
@@ -51,9 +58,8 @@ public class MovieController {
     @PutMapping("/{movieId}/genre/{genreId}")
     public Movie genreToMovie(@PathVariable Long movieId,
                               @PathVariable Long genreId) {
-        return binderService.bindMovieGenre(movieId,genreId);
+        return binderService.bindMovieGenre(movieId, genreId);
     }
-
 
 
 //    @PutMapping("/{movieId}/actor/{actorId}")

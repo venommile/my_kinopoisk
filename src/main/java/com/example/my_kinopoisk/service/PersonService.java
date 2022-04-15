@@ -5,11 +5,14 @@ import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entity.ParticipantFilm;
 import com.example.my_kinopoisk.domain.entity.Person;
+import com.example.my_kinopoisk.domain.entity.Person_;
 import com.example.my_kinopoisk.exception.PersonNotFoundException;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,5 +69,29 @@ public class PersonService {
                     new Person(participant)
                 )
             );
+    }
+
+    public Page<Person> search(String firstName, String lastName, Pageable pageable) {
+        return personRepository.findAll(Specification.where(
+            hasFirstName(firstName)).and(hasLastName(lastName)), pageable);
+    }
+
+
+    /*
+    You should at first compile to generate Person_ class
+
+     */
+    private Specification<Person> hasLastName(String surname) {
+        if (surname != null && surname.length() > 0) {
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.surname)), surname.toUpperCase() + "%");
+        }
+        return null;
+    }
+
+    private Specification<Person> hasFirstName(String name) {
+        if (name != null && name.length() > 0) {
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.name)), name.toUpperCase() + "%");
+        }
+        return null;
     }
 }

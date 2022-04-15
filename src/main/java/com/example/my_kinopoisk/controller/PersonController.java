@@ -4,12 +4,14 @@ import com.example.my_kinopoisk.domain.dto.PersonCreateDto;
 import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.service.PersonService;
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
+
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/persons")
@@ -35,7 +41,8 @@ public class PersonController {
     }
 
     @PostMapping("")
-    public ResponseEntity<PersonViewDto> savePerson(@RequestBody PersonCreateDto personDto) {
+    @Validated(OnCreate.class)
+    public ResponseEntity<PersonViewDto> savePerson(@Valid @RequestBody PersonCreateDto personDto) {
         return ResponseEntity.ok(personService.savePerson(personDto));
     }
 

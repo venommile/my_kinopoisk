@@ -8,7 +8,6 @@ import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,6 +26,11 @@ public class MovieService {
     private final GenreService genreService;
     private final ActorService actorService;
     private final FilmCrewService filmCrewService;
+
+    public List<Movie> getMovies(String title, Pageable pageable) {//to ViewDto?
+        return movieRepository.findByTitleContainingIgnoreCase(title, pageable);
+    }
+
 
     public List<Movie> getMovies(Pageable pageable) {
         return StreamSupport.stream(
@@ -49,6 +53,7 @@ public class MovieService {
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public MovieInListDto saveMovieDto(MovieInListDto movieInListDto) {
 
         return movieMapper.toInListDto(
@@ -86,7 +91,7 @@ public class MovieService {
 
 
     public void deleteMovie(Long id) {
-        getMovie(id);
+//        getMovie(id);
         movieRepository.deleteById(id);
     }
 

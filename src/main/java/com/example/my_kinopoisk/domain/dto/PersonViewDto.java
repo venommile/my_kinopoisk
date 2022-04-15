@@ -2,9 +2,7 @@ package com.example.my_kinopoisk.domain.dto;
 
 import com.example.my_kinopoisk.domain.entity.Gender;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -25,8 +23,6 @@ public class PersonViewDto implements Serializable {
     private final Date birthday;
     private final Gender gender;
     private final List<ActorInPersonDto> actorRoles;
-    private final List<FilmCrewDto> filmCrewRoles;
-    private final Set<GenreViewDto> genres;
-
-
+    private final List<FilmCrewInPerson> filmCrewRoles;
+    private final Set<GenreDto> genres;
 }

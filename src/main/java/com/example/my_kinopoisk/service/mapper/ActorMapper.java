@@ -1,7 +1,7 @@
 package com.example.my_kinopoisk.service.mapper;
 
 
-import com.example.my_kinopoisk.domain.dto.ActorCreateDto;
+import com.example.my_kinopoisk.domain.dto.ActorMovieViewDto;
 import com.example.my_kinopoisk.domain.entity.Actor;
 import org.mapstruct.Mapper;
 
@@ -9,7 +9,8 @@ import org.mapstruct.Mapper;
 public interface ActorMapper {
 
 
-    ActorCreateDto toCreateDto(Actor actor);
-    Actor toEntity(ActorCreateDto actorCreateDto);
+    ActorMovieViewDto toCreateDto(Actor actor);
+
+    Actor toEntity(ActorMovieViewDto actorCreateDto);
 
 }

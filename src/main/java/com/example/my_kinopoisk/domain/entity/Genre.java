@@ -1,6 +1,6 @@
 package com.example.my_kinopoisk.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -21,15 +22,14 @@ import java.util.List;
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Null(groups = OnCreate.class)
     private Long id;
 
-
-
-    @NotNull
     @Column(unique = true)
     private String title;
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    @JsonIgnore
+
+
     private List<Movie> movies = new ArrayList<>();
 
 
