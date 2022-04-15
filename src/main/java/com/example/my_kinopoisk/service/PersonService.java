@@ -71,9 +71,13 @@ public class PersonService {
             );
     }
 
-    public Page<Person> search(String firstName, String lastName, Pageable pageable) {
+    private Page<Person> searchPerson(String firstName, String lastName, Pageable pageable) {
         return personRepository.findAll(Specification.where(
             hasFirstName(firstName)).and(hasLastName(lastName)), pageable);
+    }
+
+    public List<PersonInListDto> search(String firstName, String lastName, Pageable pageable) {
+       return searchPerson(firstName, lastName, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
     }
 
 

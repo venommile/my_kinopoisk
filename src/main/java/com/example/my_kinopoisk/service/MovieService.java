@@ -27,10 +27,10 @@ public class MovieService {
     private final ActorService actorService;
     private final FilmCrewService filmCrewService;
 
-    public List<Movie> getMovies(String title, Pageable pageable) {//to ViewDto?
-        return movieRepository.findByTitleContainingIgnoreCase(title, pageable);
+    public List<MovieInListDto> getMovies(String title, Pageable pageable) {//to ViewDto?
+        return movieRepository.findByTitleContainingIgnoreCase(title)
+            .stream().map(movieMapper::toInListDto).collect(Collectors.toList());
     }
-
 
     public List<Movie> getMovies(Pageable pageable) {
         return StreamSupport.stream(
@@ -91,7 +91,7 @@ public class MovieService {
 
 
     public void deleteMovie(Long id) {
-//        getMovie(id);
+        getMovie(id);
         movieRepository.deleteById(id);
     }
 
