@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,22 +32,26 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('read')")
     public Page<PersonInListDto> getPersons(@ParameterObject Pageable pageable) {
         return new PageImpl<>(personService.getPersonsOnlyDto(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<PersonViewDto> getPerson(@PathVariable Long id) {
         return ResponseEntity.ok(personService.getPersonDto(id));
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<PersonViewDto> savePerson(@Valid @RequestBody PersonCreateDto personDto) {
         return ResponseEntity.ok(personService.savePerson(personDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
         personService.deletePerson(id);
         return ResponseEntity.noContent().build();

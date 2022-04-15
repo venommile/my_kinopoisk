@@ -39,7 +39,7 @@ public class GenreService {
 
 
     public void deleteGenre(Long id) {
-        getGenre(id);
+        getGenre(id);//как сделать без этого
         genreRepository.deleteById(id);
     }
 

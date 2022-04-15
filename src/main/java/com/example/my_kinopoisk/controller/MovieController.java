@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,28 +35,33 @@ public class MovieController {
     private final BinderService binderService;
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('read')")
     public Page<MovieInListDto> getMovies(@ParameterObject Pageable pageable) {
         return new PageImpl<>(movieService.getMoviesInListDto(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<MovieViewDto> getMovie(@PathVariable Long id) {
         return ResponseEntity.ok(movieService.getMovieViewDto(id));
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<MovieViewDto> saveMovie(@Valid @RequestBody MovieCreateDto movieDto) {
         return ResponseEntity.ok(movieService.saveMovieDto(movieDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{movieId}/genre/{genreId}")
+    @PreAuthorize("hasAuthority('write')")
     public Movie genreToMovie(@PathVariable Long movieId,
                               @PathVariable Long genreId) {
         return binderService.bindMovieGenre(movieId, genreId);
