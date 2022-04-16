@@ -4,7 +4,6 @@ import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,13 +25,14 @@ public class FilmCrew implements ParticipantFilm {
 
     @NotNull
     private String name;
+    @NotNull
     private String surname;
     private String role;
 
 
-    @ManyToOne()
+    @ManyToOne
     private Person person;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
 }

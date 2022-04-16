@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet author="liquibase-docs" id="loadData-example">
+        <loadData
+            commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="persons.csv"
+            quotchar="'"
+            relativeToChangelogFile="true"
+            separator=";"
+            tableName="person"
+            usePreparedStatements="true">
+            <column name="id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name ="height" type="FLOAT"/>
+            <column name="birthday" type="DATE"/>
+            <column name="gender" type="INT"/>
+
+
+        </loadData>
+
+
+    </changeSet>
+</databaseChangeLog>

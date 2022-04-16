@@ -5,12 +5,19 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <include file="init/001-init.xml" relativeToChangelogFile="true"/>
-    <include file="init/002-init.xml" relativeToChangelogFile="true"/>
     <include file="data/genre/load_genre_data.xml" relativeToChangelogFile="true"/>
 
     <include file="data/movie/load_movie_data.xml" relativeToChangelogFile="true"/>
+    <include file="data/person/load_data_person.xml" relativeToChangelogFile="true"/>
+    <include file="data/filmcrew/load_filmcrew_data.xml" relativeToChangelogFile="true"/>
+    <include file="data/actor/load_actor_data.xml" relativeToChangelogFile="true"/>
+
+
     <include file="data/movie_genre/movie_genre.xml" relativeToChangelogFile="true"/>
 
     <include file="data/user/load_user_data.xml" relativeToChangelogFile="true"/>
+
+
+
 
 </databaseChangeLog>

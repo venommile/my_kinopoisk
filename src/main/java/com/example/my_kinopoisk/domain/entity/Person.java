@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,6 +37,8 @@ public class Person {
     private String name;
     @NotNull
     private String surname;
+
+    @Column(length = 1000)
     private String description;
     private Float height;
     private Date birthday;
