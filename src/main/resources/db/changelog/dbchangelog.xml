@@ -14,10 +14,8 @@
 
 
     <include file="data/movie_genre/movie_genre.xml" relativeToChangelogFile="true"/>
-
+    <include file="data/person_genre/load_person_genre.xml" relativeToChangelogFile="true"/>
     <include file="data/user/load_user_data.xml" relativeToChangelogFile="true"/>
-
-
 
 
 </databaseChangeLog>

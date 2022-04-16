@@ -77,7 +77,7 @@ public class PersonService {
     }
 
     public List<PersonInListDto> search(String firstName, String lastName, Pageable pageable) {
-       return searchPerson(firstName, lastName, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
+        return searchPerson(firstName, lastName, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
     }
 
 

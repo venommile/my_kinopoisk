@@ -18,7 +18,7 @@
             <column name="id" type="BIGINT"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="surname" type="VARCHAR(255)"/>
-            <column name ="role" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
             <column name="person_id" type="BIGINT"/>
             <column name="movie_id" type="BIGINT"/>
         </loadData>

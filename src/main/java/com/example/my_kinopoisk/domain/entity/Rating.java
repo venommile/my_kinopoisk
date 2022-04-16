@@ -3,15 +3,11 @@ package com.example.my_kinopoisk.domain.entity;
 import com.example.my_kinopoisk.validation.OnCreate;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Rating {

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
     private final MovieService movieService;
     private final PersonService personService;
+
     @GetMapping("/movie/{title}")
     @PreAuthorize("hasAuthority('read')")
     public Page<MovieInListDto> searchMovie(@PathVariable String title, @ParameterObject Pageable pageable) {
@@ -33,6 +34,6 @@ public class SearchController {
     public Page<PersonInListDto> searchPerson(@PathVariable(required = false) String firstName,
                                               @PathVariable(required = false) String surname,
                                               @ParameterObject Pageable pageable) {
-        return new PageImpl<>(personService.search(firstName, surname,pageable));
+        return new PageImpl<>(personService.search(firstName, surname, pageable));
     }
 }

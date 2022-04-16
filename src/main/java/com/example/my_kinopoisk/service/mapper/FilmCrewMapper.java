@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface FilmCrewMapper {
     FilmCrewMovieViewDto toMovieDto(FilmCrew filmCrew);
-
+    //как-то добавить поле personId to Dto,Как мапить?
 
     FilmCrewInPerson toPersonDto(FilmCrew filmCrew);
 

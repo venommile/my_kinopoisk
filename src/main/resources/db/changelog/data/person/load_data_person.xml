@@ -19,7 +19,7 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="surname" type="VARCHAR(255)"/>
             <column name="description" type="VARCHAR(1000)"/>
-            <column name ="height" type="FLOAT"/>
+            <column name="height" type="FLOAT"/>
             <column name="birthday" type="DATE"/>
             <column name="gender" type="INT"/>
 

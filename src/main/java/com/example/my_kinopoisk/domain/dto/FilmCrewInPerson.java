@@ -3,7 +3,6 @@ package com.example.my_kinopoisk.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @AllArgsConstructor

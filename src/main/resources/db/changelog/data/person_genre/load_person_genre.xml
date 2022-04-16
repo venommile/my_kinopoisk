@@ -9,18 +9,14 @@
         <loadData
             commentLineStartsWith="//"
             encoding="UTF-8"
-            file="filmcrews.csv"
+            file="person_genre.csv"
             quotchar="'"
             relativeToChangelogFile="true"
             separator=";"
-            tableName="film_crew"
+            tableName="genre_persons"
             usePreparedStatements="true">
-            <column name="id" type="BIGINT"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="surname" type="VARCHAR(255)"/>
-            <column name="role" type="VARCHAR(255)"/>
-            <column name="person_id" type="BIGINT"/>
-            <column name="movie_id" type="BIGINT"/>
+            <column name="persons_id" type="bigint"/>
+            <column name="genres_id" type="bigint"/>
 
 
         </loadData>
