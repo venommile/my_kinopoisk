@@ -3,6 +3,8 @@ package com.example.my_kinopoisk.domain.entity;
 import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +19,6 @@ import java.time.OffsetDateTime;
 @Entity
 public class Review {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Null(groups = OnCreate.class)
@@ -25,10 +26,15 @@ public class Review {
     private Long userId;
     private String username;
 
-    private OffsetDateTime publicDate;
+    @CreatedDate
+    private OffsetDateTime createDate;
+
+    @LastModifiedDate
+    private OffsetDateTime updatedDate;
     private String title;
     private String body;
     private Float rating;
+
     @ManyToOne
     private Movie movie;
 

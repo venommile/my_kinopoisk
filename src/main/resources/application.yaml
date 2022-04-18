@@ -20,4 +20,5 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/dbchangelog.xml
     enabled: true
-
+server:
+  port: 8081

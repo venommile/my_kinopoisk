@@ -16,4 +16,6 @@ public class FilmCrewMovieViewDto {
     private final String name;
     private final String surname;
     private final String role;
+
+    private final Long personId;
 }

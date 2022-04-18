@@ -4,6 +4,7 @@ import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,10 @@ public class Actor implements ParticipantFilm {
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
+
+    @Column(name = "person_id", insertable = false, updatable = false)
+    private Long personId;
 
 }

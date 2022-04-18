@@ -39,7 +39,6 @@ public class MovieService {
     }
 
     public MovieViewDto getMovieViewDto(Long id) {
-        System.out.println(getMovie(id).getFilmCrews());
         return movieMapper.toViewDto(
             getMovie(id)
         );

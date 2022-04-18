@@ -18,4 +18,5 @@ public class ActorMovieViewDto implements Serializable {
     private final String surname;
     private final String role;
 
+    private final Long personId;
 }

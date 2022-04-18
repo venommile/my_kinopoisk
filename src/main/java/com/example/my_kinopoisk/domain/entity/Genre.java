@@ -27,9 +27,8 @@ public class Genre {
 
     @Column(unique = true)
     private String title;
+
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-
-
     private List<Movie> movies = new ArrayList<>();
 
 

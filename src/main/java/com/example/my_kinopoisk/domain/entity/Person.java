@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,6 +30,7 @@ import java.util.Set;
 @Table(uniqueConstraints =
 @UniqueConstraint(name = "FullName", columnNames = {"name", "surname"}))
 public class Person {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Null(groups = OnCreate.class)
@@ -40,13 +42,19 @@ public class Person {
 
     @Column(length = 1000)
     private String description;
+
     private Float height;
     private Date birthday;
+
+    @Enumerated
     private Gender gender;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
     private Set<Actor> actorRoles = new HashSet<>();
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
     private Set<FilmCrew> filmCrewRoles = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons")
     private Set<Genre> genres = new HashSet<>();
 

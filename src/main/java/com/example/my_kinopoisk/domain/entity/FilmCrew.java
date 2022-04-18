@@ -4,6 +4,7 @@ import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,11 +18,11 @@ import javax.validation.constraints.Null;
 @Setter
 @Entity
 public class FilmCrew implements ParticipantFilm {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Null(groups = OnCreate.class)
     private Long id;
-
 
     @NotNull
     private String name;
@@ -29,10 +30,13 @@ public class FilmCrew implements ParticipantFilm {
     private String surname;
     private String role;
 
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Person person;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
+    @Column(name = "person_id", insertable = false, updatable = false)
+    private Long personId;
 
 }
