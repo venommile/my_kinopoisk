@@ -1,6 +1,5 @@
 package com.example.my_kinopoisk.controller;
 
-
 import com.example.my_kinopoisk.MyKinopoiskApplicationTests;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.entity.Actor;
@@ -35,12 +34,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-//@Transactional
-//Если мы поставим Transactional, то JDBC template не будет видеть что реально происходит в базе
-@WithMockUser(username = "admin", authorities = {"read", "write"})
-public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
+@AutoConfigureMockMvc
+@WithMockUser(username = "user", authorities = {"read"})
+public class MovieControllerUserTest extends MyKinopoiskApplicationTests {
     String movieNotFound = "Movie was not found";
     String genreNotFound = "Genre was not found";
 
@@ -136,18 +133,11 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         Assertions.assertEquals(Boolean.FALSE, answer);
 
         var requestContent = objectMapper.writeValueAsString(movie);
-        movie.setId(1000L);
-
-        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
 
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
-            .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
-
-        var answer2 = jdbcTemplate.queryForObject("select Exists( select 1 from movie where id = 1000)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer2);
+            .andExpect(status().isForbidden());
 
     }
 
@@ -155,7 +145,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
     public void saveMovieWithInnerEntities() throws Exception {
         Long movieId = 1005L;
         Long genreId = 1004L;
-        Long actorId=  1003L;
+        Long actorId = 1003L;
         Long filmCrewId = 1001L;
         var movie = new Movie();
         movie.setTitle("The Terminator");
@@ -191,79 +181,33 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
         var requestContent = objectMapper.writeValueAsString(movie);
 
-
-        genre.setId(genreId);
-        movie.setId(movieId);
-        actor.setId(actorId);
-
-        filmCrew.setId(filmCrewId);
-
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
 
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
-            .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(status().isForbidden());
 
-        var answer1 = jdbcTemplate.queryForObject("select EXISTS(select 1 from movie where id = 1005)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer1);
-
-        var answer2 = jdbcTemplate.queryForObject("select EXISTS(select 1 from genre where id = 1004)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer2);
-
-        var answer3 = jdbcTemplate.queryForObject("select EXISTS( select 1 from actor where id = 1003)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer3);
-
-        var answer4 = jdbcTemplate.queryForObject("select EXISTS( select 1 from film_crew where id = 1001)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer4);
     }
 
 
     @Test
     public void deleteMoviesNotSuccess() throws Exception {
         mockMvc.perform(delete("/movies/" + 1))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(status().isForbidden());
     }
 
     @Test
-    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void deleteMoviesSuccess() throws Exception {
-        var answer1 = jdbcTemplate.queryForObject("select EXISTS(select 1 from movie where id = 1)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer1);
-
-        mockMvc.perform(delete("/movies/" + 1))
-            .andExpect(status().isNoContent());
-
-        answer1 = jdbcTemplate.queryForObject("select EXISTS(select 1 from movie where id = 1)", Boolean.class);
-        Assertions.assertEquals(Boolean.FALSE, answer1);
+        mockMvc.perform(delete("/movies/" + 1)).andExpect(status().isForbidden());
     }
 
     @Test
-    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
-    @Sql(statements = "insert into genre (id, title) values (1, 'action')")
     public void bindGenreToMovieSuccess() throws Exception {
         Long movieId = 1L;
         Long genreId = 1L;
-        var movie = new Movie();
-        movie.setId(movieId);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
-
-        var genre = new Genre();
-        genre.setId(1L);
-        genre.setTitle("action");
-
-        movie.setGenres(Set.of(genre));
-
-        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
-            .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(status().isForbidden());
     }
 
 
@@ -274,8 +218,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         Long genreId = 1L;
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -285,9 +228,6 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         Long genreId = 1L;
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(genreNotFoundMessage));
+            .andExpect(status().isForbidden());
     }
-
-
 }
