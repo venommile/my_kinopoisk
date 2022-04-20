@@ -8,9 +8,11 @@ import com.example.my_kinopoisk.domain.entity.Genre;
 import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.message.ErrorResponse;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
@@ -19,14 +21,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +44,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
     String movieNotFound = "Movie was not found";
+    String genreNotFound = "Genre was not found";
+
+    ErrorResponse movieNotFoundError;
+    ErrorResponse genreNotFoundError;
+
+    String movieNotFoundMessage;
+    String genreNotFoundMessage;
+
+    @PostConstruct
+    void initMessages() throws JsonProcessingException {
+        movieNotFoundError = new ErrorResponse(movieNotFound);
+        genreNotFoundError = new ErrorResponse(genreNotFound);
+
+        movieNotFoundMessage = objectMapper.writeValueAsString(movieNotFoundError);
+        genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
+    }
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,6 +73,8 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+
 
     @Test
     @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
@@ -71,12 +97,9 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
     @Test
     public void getMovieNotFound() throws Exception {
-        var message = new ErrorResponse(movieNotFound);
-        var expectedResponse = objectMapper.writeValueAsString(message);
-
         mockMvc.perform(get("/movies/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(content().string(movieNotFoundMessage));
     }
 
 
@@ -119,6 +142,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         movie.setId(1000L);
 
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
+
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
@@ -163,6 +187,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         actor.setId(1001L);
 
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
+
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
@@ -182,12 +207,9 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
     @Test
     public void deleteMoviesNotSuccess() throws Exception {
-        var message = new ErrorResponse(movieNotFound);
-        var expectedResponse = objectMapper.writeValueAsString(message);
-
         mockMvc.perform(delete("/movies/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(content().string(movieNotFoundMessage));
     }
 
     @Test
@@ -202,4 +224,55 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         answer1 = jdbcTemplate.queryForObject("select EXISTS(select 1 from movie where id = 1)", Boolean.class);
         Assertions.assertEquals(Boolean.FALSE, answer1);
     }
+
+    @Test
+    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
+    @Sql(statements = "insert into genre (id, title) values (1, 'action')")
+    public void bindGenreToMovieSuccess() throws Exception {
+        Long movieId = 1L;
+        Long genreId = 1L;
+        var movie = new Movie();
+        movie.setId(movieId);
+        movie.setTitle("The Terminator");
+        movie.setAgeLimit(16);
+        movie.setCountryOfProduction("Country");
+        movie.setDescription("desc");
+        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+
+        var genre = new Genre();
+        genre.setId(1L);
+        genre.setTitle("action");
+
+        movie.setGenres(Set.of(genre));
+
+        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
+        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
+            .andExpect(status().isOk())
+            .andExpect(content().string(expectedResponse));
+    }
+
+
+    @Test
+    @Sql(statements = "insert into genre (id, title) values (1, 'action')")
+    public void bindGenreToMovieNotSuccessMovie() throws Exception {
+        Long movieId = 1L;
+        Long genreId = 1L;
+
+        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string(movieNotFoundMessage));
+    }
+
+    @Test
+    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
+    public void bindGenreToMovieNotSuccessGenre() throws Exception {
+        Long movieId = 1L;
+        Long genreId = 1L;
+
+        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string(genreNotFoundMessage));
+    }
+
+
 }

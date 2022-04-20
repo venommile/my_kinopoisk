@@ -62,9 +62,9 @@ public class MovieController {
 
     @PutMapping("/{movieId}/genre/{genreId}")
     @PreAuthorize("hasAuthority('write')")
-    public Movie genreToMovie(@PathVariable Long movieId,
+    public ResponseEntity<MovieViewDto> genreToMovie(@PathVariable Long movieId,
                               @PathVariable Long genreId) {
-        return binderService.bindMovieGenre(movieId, genreId);
+        return ResponseEntity.ok(binderService.bindMovieGenre(movieId, genreId));
     }
 
 
