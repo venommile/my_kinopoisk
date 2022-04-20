@@ -2,7 +2,9 @@ package com.example.my_kinopoisk.domain.entity;
 
 
 import com.example.my_kinopoisk.validation.OnCreate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -17,7 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +27,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +41,7 @@ public class Movie {
     private String description;
 
 
-    private OffsetDateTime releaseDate;
+    private LocalDate releaseDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Genre> genres = new HashSet<>();
@@ -77,8 +80,6 @@ public class Movie {
 
 
     // to Servece
-
-
 
 
 

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Null;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Getter
@@ -27,10 +28,10 @@ public class Review {
     private String username;
 
     @CreatedDate
-    private OffsetDateTime createDate;
+    private LocalDate createDate;
 
     @LastModifiedDate
-    private OffsetDateTime updatedDate;
+    private LocalDate updatedDate;
     private String title;
     private String body;
     private Float rating;

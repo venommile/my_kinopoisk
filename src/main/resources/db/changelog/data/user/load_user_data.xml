@@ -13,7 +13,7 @@
             quotchar="'"
             relativeToChangelogFile="true"
             separator=";"
-            tableName="user"
+            tableName="USER"
             usePreparedStatements="true">
             <column name="id" type="bigint"/>
             <column name="login" type="varchar(255)"/>

@@ -1,8 +1,6 @@
 package com.example.my_kinopoisk;
 
-import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.BeforeAll;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -21,7 +19,8 @@ public class MyKinopoiskApplicationTests {
 
     @DynamicPropertySource
     public static void overrideProperties(DynamicPropertyRegistry registry) {
-
+        registry.add("spring.datasource.useUnicode", () -> "true");
+        registry.add("spring.datasource.characterEncoding", () -> "utf8");
         registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgresContainer::getUsername);
         registry.add("spring.datasource.password", postgresContainer::getPassword);

@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class MovieCreateDto implements Serializable {
     private final Integer ageLimit;
     private final String countryOfProduction;
     private final String description;
-    private final OffsetDateTime releaseDate;
+    private final LocalDate releaseDate;
 
     @Valid
     private final Set<GenreDto> genres;

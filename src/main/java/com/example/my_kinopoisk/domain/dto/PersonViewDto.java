@@ -7,6 +7,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class PersonViewDto implements Serializable {
     private final String surname;
     private final String description;
     private final Float height;
-    private final Date birthday;
+    private final LocalDate birthday;
     private final Gender gender;
     private final List<ActorInPersonDto> actorRoles;
     private final List<FilmCrewInPerson> filmCrewRoles;
