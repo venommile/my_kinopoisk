@@ -29,11 +29,10 @@ public class SearchController {
     }
 
 
-    @GetMapping("/person/{firstName}/{surname}")
+    @GetMapping("/person/searchRequest")
     @PreAuthorize("hasAuthority('read')")
-    public Page<PersonInListDto> searchPerson(@PathVariable(required = false) String firstName,
-                                              @PathVariable(required = false) String surname,
+    public Page<PersonInListDto> searchPerson(String searchRequest,
                                               @ParameterObject Pageable pageable) {
-        return new PageImpl<>(personService.search(firstName, surname, pageable));
+        return new PageImpl<>(personService.search(searchRequest, pageable));
     }
 }

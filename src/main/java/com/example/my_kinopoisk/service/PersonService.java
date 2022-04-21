@@ -80,6 +80,21 @@ public class PersonService {
         return searchPerson(firstName, lastName, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
     }
 
+    public List<PersonInListDto> search(String searchRequest, Pageable pageable) {
+        var words = searchRequest.split("\\s+", 2);
+
+        if (words.length > 1) {
+            return search(words[0], words[1], pageable);
+        } else {
+            var answer = search(words[0], null, pageable);
+            answer.addAll(search(null, words[0], pageable));
+
+            //Можем вернуть больше объектов,чем надо.Но как пофиксить? хз
+            return answer;
+        }
+
+    }
+
 
     /*
     You should at first compile to generate Person_ class
@@ -87,14 +102,14 @@ public class PersonService {
      */
     private Specification<Person> hasLastName(String surname) {
         if (surname != null && surname.length() > 0) {
-            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.surname)), surname.toUpperCase() + "%");
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.surname)), "%" + surname.toUpperCase() + "%");
         }
         return null;
     }
 
     private Specification<Person> hasFirstName(String name) {
         if (name != null && name.length() > 0) {
-            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.name)), name.toUpperCase() + "%");
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.name)), "%" + name.toUpperCase() + "%");
         }
         return null;
     }
