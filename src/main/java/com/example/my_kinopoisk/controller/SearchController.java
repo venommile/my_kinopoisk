@@ -9,7 +9,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +22,14 @@ public class SearchController {
     private final PersonService personService;
 
     @GetMapping("/movie/{title}")
-    @PreAuthorize("hasAuthority('read')")
+    // @PreAuthorize("hasAuthority('read')")
     public Page<MovieInListDto> searchMovie(@PathVariable String title, @ParameterObject Pageable pageable) {
         return new PageImpl<>(movieService.getMovies(title, pageable));
     }
 
 
     @GetMapping("/person/searchRequest")
-    @PreAuthorize("hasAuthority('read')")
+    // @PreAuthorize("hasAuthority('read')")
     public Page<PersonInListDto> searchPerson(String searchRequest,
                                               @ParameterObject Pageable pageable) {
         return new PageImpl<>(personService.search(searchRequest, pageable));

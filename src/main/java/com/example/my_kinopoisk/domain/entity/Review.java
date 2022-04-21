@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
