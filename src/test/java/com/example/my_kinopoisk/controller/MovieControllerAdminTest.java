@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,6 +51,14 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
     String movieNotFoundMessage;
     String genreNotFoundMessage;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MovieMapper movieMapper;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @PostConstruct
     void initMessages() throws JsonProcessingException {
@@ -63,22 +70,9 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
     }
 
     @AfterEach
-    public void clean(){
+    public void clean() {
         cleanTables();
     }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private MovieMapper movieMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
 
     @Test
     @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
@@ -162,7 +156,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
     public void saveMovieWithInnerEntities() throws Exception {
         Long movieId = 1005L;
         Long genreId = 1004L;
-        Long actorId=  1003L;
+        Long actorId = 1003L;
         Long filmCrewId = 1001L;
         var movie = new Movie();
         movie.setTitle("The Terminator");
@@ -230,7 +224,7 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
     public void saveMovieWithInnerEntitiesWhenTwoRolesAndOnePerson() throws Exception {
         Long movieId = 1003L;
 
-        Long actorId=  1002L;
+        Long actorId = 1002L;
         Long filmCrewId = 1001L;
         var movie = new Movie();
         movie.setTitle("The Terminator");
@@ -293,13 +287,13 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
 
         var answer5 = jdbcTemplate.queryForObject("select person_id from actor where id = 1002", Integer.class);
 
-        var answer6 = jdbcTemplate.queryForObject("select person_id from film_crew where id = 1001",Integer.class);
+        var answer6 = jdbcTemplate.queryForObject("select person_id from film_crew where id = 1001", Integer.class);
 
         assert answer5 != null;
         assert answer6 != null;
         Assertions.assertEquals(answer5, answer6);
 
-        var answer7 = jdbcTemplate.queryForObject("SELECT count(*) FROM person",Integer.class);
+        var answer7 = jdbcTemplate.queryForObject("SELECT count(*) FROM person", Integer.class);
 
         Assertions.assertEquals(answer7, Integer.valueOf(1));
 

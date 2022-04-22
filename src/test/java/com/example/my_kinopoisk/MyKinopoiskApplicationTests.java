@@ -1,7 +1,6 @@
 package com.example.my_kinopoisk;
 
 import liquibase.integration.spring.SpringLiquibase;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +12,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startables;
-
-import java.util.stream.Stream;
 
 
 @DirtiesContext
@@ -26,13 +22,10 @@ public class MyKinopoiskApplicationTests {
 
     @Container
     public static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:14.1").withReuse(true);
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-
     @Autowired
     SpringLiquibase liquibase;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @DynamicPropertySource
     public static void overrideProperties(DynamicPropertyRegistry registry) {
@@ -49,7 +42,7 @@ public class MyKinopoiskApplicationTests {
     }
 
     public void cleanTables() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "movie_genres","actor","genre","film_crew","movie","genre_persons","person",
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "movie_genres", "actor", "genre", "film_crew", "movie", "genre_persons", "person",
             "rating", "review");
         jdbcTemplate.execute("SELECT setval('hibernate_sequence', 1000, false )");
     }

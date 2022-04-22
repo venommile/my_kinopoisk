@@ -46,6 +46,14 @@ public class MovieControllerUserTest extends MyKinopoiskApplicationTests {
 
     String movieNotFoundMessage;
     String genreNotFoundMessage;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MovieMapper movieMapper;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @PostConstruct
     void initMessages() throws JsonProcessingException {
@@ -60,19 +68,6 @@ public class MovieControllerUserTest extends MyKinopoiskApplicationTests {
     public void clean() {
         cleanTables();
     }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private MovieMapper movieMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
 
     @Test
     @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")

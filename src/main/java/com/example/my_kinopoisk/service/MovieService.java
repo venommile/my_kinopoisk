@@ -39,7 +39,8 @@ public class MovieService {
     public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {//optimize?
 
         var foundMovies = getMovies(title, pageable);
-        if(!genreDtoList.isEmpty()){
+
+        if (!genreDtoList.isEmpty()) {
             List<Movie> moviesWithRequiredGenre = new ArrayList<>();
             for (var movie : foundMovies) {
                 for (var foundGenre : movie.getGenres()) {
@@ -48,7 +49,7 @@ public class MovieService {
                     }
                 }
             }
-            foundMovies =  moviesWithRequiredGenre;
+            foundMovies = moviesWithRequiredGenre;
         }
 
 

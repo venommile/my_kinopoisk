@@ -16,27 +16,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @WithMockUser(username = "admin", authorities = {"read", "write"})
-public class GenreControllerAdminTest  extends MyKinopoiskApplicationTests {
+public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
 
     String genreNotFound = "Genre was not found";
 
@@ -48,10 +42,15 @@ public class GenreControllerAdminTest  extends MyKinopoiskApplicationTests {
 
     @Autowired
     private ObjectMapper objectMapper;
-
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private GenreMapper genreMapper;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @AfterEach
-    public void clean(){
+    public void clean() {
         cleanTables();
     }
 
@@ -60,16 +59,6 @@ public class GenreControllerAdminTest  extends MyKinopoiskApplicationTests {
         genreNotFoundError = new ErrorResponse(genreNotFound);
         genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
     }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-
-    @Autowired
-    private GenreMapper genreMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     public void saveGenreSuccess() throws Exception {

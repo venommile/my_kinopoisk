@@ -29,6 +29,10 @@ public class GenreService {
         return genreRepository.findById(id).orElseThrow(GenreNotFoundException::new);
     }
 
+    public List<Genre> getGenresByIds(Iterable<Long> genreIds) {
+        return genreRepository.findAllById(genreIds);
+    }
+
 
     public List<GenreDto> getGenresListDto(Pageable pageable) {
         return StreamSupport.stream(

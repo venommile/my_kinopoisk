@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,26 +41,23 @@ public class GenreControllerUserTest extends MyKinopoiskApplicationTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private GenreMapper genreMapper;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @AfterEach
-    public void clean(){
+    public void clean() {
         cleanTables();
     }
+
     @PostConstruct
     void initMessages() throws JsonProcessingException {
         genreNotFoundError = new ErrorResponse(genreNotFound);
         genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
     }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-
-    @Autowired
-    private GenreMapper genreMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     public void saveGenreSuccess() throws Exception {

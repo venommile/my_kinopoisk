@@ -3,7 +3,6 @@ package com.example.my_kinopoisk.controller;
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
-import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.service.BinderService;
 import com.example.my_kinopoisk.service.MovieService;
 import com.example.my_kinopoisk.validation.OnCreate;
@@ -63,7 +62,7 @@ public class MovieController {
     @PutMapping("/{movieId}/genre/{genreId}")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<MovieViewDto> genreToMovie(@PathVariable Long movieId,
-                              @PathVariable Long genreId) {
+                                                     @PathVariable Long genreId) {
         return ResponseEntity.ok(binderService.bindMovieGenre(movieId, genreId));
     }
 

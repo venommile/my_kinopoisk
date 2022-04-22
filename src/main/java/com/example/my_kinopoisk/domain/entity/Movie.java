@@ -2,7 +2,6 @@ package com.example.my_kinopoisk.domain.entity;
 
 
 import com.example.my_kinopoisk.validation.OnCreate;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

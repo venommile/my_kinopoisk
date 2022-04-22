@@ -2,7 +2,6 @@ package com.example.my_kinopoisk.service;
 
 
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
-import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
