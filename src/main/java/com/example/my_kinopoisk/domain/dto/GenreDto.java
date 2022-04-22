@@ -1,6 +1,7 @@
 package com.example.my_kinopoisk.domain.dto;
 
 import com.example.my_kinopoisk.validation.OnCreate;
+import com.example.my_kinopoisk.validation.OnSearch;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ public class GenreDto implements Serializable {
     @Null(groups = OnCreate.class)
     private Long id;
 
+    @Null(groups = OnSearch.class)
     private String title;
 
     public boolean equals(Object object) {

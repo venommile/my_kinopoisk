@@ -5,6 +5,7 @@ import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.service.MovieService;
 import com.example.my_kinopoisk.service.PersonService;
+import com.example.my_kinopoisk.validation.OnSearch;
 import com.example.my_kinopoisk.wrapper.MovieSearchWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/search")
@@ -31,7 +33,8 @@ public class SearchController {
 
     @PostMapping("/movie")
     @PreAuthorize("hasAuthority('read')")
-    public Page<MovieInListDto> searchMovie(@RequestBody  MovieSearchWrapper movieSearchWrapper, @ParameterObject Pageable pageable) {
+    @Validated(OnSearch.class)
+    public Page<MovieInListDto> searchMovie(@Valid @RequestBody MovieSearchWrapper movieSearchWrapper, @ParameterObject Pageable pageable) {
         return new PageImpl<>(movieService.getMovies(movieSearchWrapper.getTitle(),
             movieSearchWrapper.getValidatedList(),
             pageable)
