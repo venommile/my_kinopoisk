@@ -10,6 +10,7 @@ import com.example.my_kinopoisk.message.ErrorResponse;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -56,6 +56,10 @@ public class MovieControllerUserTest extends MyKinopoiskApplicationTests {
         genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
     }
 
+    @AfterEach
+    public void clean() {
+        cleanTables();
+    }
 
     @Autowired
     private MockMvc mockMvc;

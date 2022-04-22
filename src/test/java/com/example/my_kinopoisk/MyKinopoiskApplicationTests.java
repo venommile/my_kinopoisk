@@ -6,13 +6,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.lifecycle.Startables;
 
+import java.util.stream.Stream;
+
+
+@DirtiesContext
 @SpringBootTest
 @Testcontainers
 public class MyKinopoiskApplicationTests {
@@ -35,15 +41,15 @@ public class MyKinopoiskApplicationTests {
         registry.add("spring.datasource.password", postgresContainer::getPassword);
     }
 
+
     @BeforeAll
     public static void beforeAll() {
         postgresContainer.start();
 
     }
 
-    @AfterEach
-    public void AfterEach() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "movie_genres","actor","genre","film_crew","movie","genre_persons",
+    public void cleanTables() {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "movie_genres","actor","genre","film_crew","movie","genre_persons","person",
             "rating", "review");
         jdbcTemplate.execute("SELECT setval('hibernate_sequence', 1000, false )");
     }

@@ -1,11 +1,13 @@
 package com.example.my_kinopoisk.service;
 
+import com.example.my_kinopoisk.domain.dto.GenreDto;
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
+import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,10 +29,31 @@ public class MovieService {
     private final GenreService genreService;
     private final ActorService actorService;
     private final FilmCrewService filmCrewService;
+    private final GenreMapper genreMapper;
 
-    public List<MovieInListDto> getMovies(String title, Pageable pageable) {//to ViewDto?
-        return movieRepository.findByTitleContainingIgnoreCase(title)
-            .stream().map(movieMapper::toInListDto).collect(Collectors.toList());
+    public List<Movie> getMovies(String title, Pageable pageable) {//to ViewDto?
+        return new ArrayList<>(movieRepository.findByTitleContainingIgnoreCase(title));
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {//optimize?
+
+        var foundMovies = getMovies(title, pageable);
+        if(!genreDtoList.isEmpty()){
+            List<Movie> moviesWithRequiredGenre = new ArrayList<>();
+            for (var movie : foundMovies) {
+                for (var foundGenre : movie.getGenres()) {
+                    if (genreDtoList.contains(genreMapper.toDto(foundGenre))) {
+                        moviesWithRequiredGenre.add(movie);
+                    }
+                }
+            }
+            foundMovies =  moviesWithRequiredGenre;
+        }
+
+
+        return foundMovies.stream().map(movieMapper::toInListDto).collect(Collectors.toList());
+
     }
 
     public List<Movie> getMovies(Pageable pageable) {

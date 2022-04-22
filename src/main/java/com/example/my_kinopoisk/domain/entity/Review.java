@@ -28,10 +28,10 @@ public class Review {
     private String username;
 
     @CreatedDate
-    private LocalDate createDate;
+    private OffsetDateTime createDate;
 
     @LastModifiedDate
-    private LocalDate updatedDate;
+    private OffsetDateTime updatedDate;
     private String title;
     private String body;
     private Float rating;

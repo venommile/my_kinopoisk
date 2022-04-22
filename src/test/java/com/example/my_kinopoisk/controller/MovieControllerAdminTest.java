@@ -11,6 +11,7 @@ import com.example.my_kinopoisk.message.ErrorResponse;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @AutoConfigureMockMvc
 //@Transactional
@@ -59,6 +62,10 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
     }
 
+    @AfterEach
+    public void clean(){
+        cleanTables();
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -219,6 +226,84 @@ public class MovieControllerAdminTest extends MyKinopoiskApplicationTests {
         Assertions.assertEquals(Boolean.TRUE, answer4);
     }
 
+    @Test
+    public void saveMovieWithInnerEntitiesWhenTwoRolesAndOnePerson() throws Exception {
+        Long movieId = 1003L;
+
+        Long actorId=  1002L;
+        Long filmCrewId = 1001L;
+        var movie = new Movie();
+        movie.setTitle("The Terminator");
+        movie.setAgeLimit(16);
+        movie.setCountryOfProduction("Country");
+        movie.setDescription("desc");
+        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+
+        var genre = new Genre();
+        genre.setTitle("drama");
+
+        var actor = new Actor();
+        actor.setSurname("actor surname");
+        actor.setName("actor name");
+        actor.setRole("role");
+
+        var actorSet = new HashSet<Actor>();
+        actorSet.add(actor);
+        movie.setActors(actorSet);
+
+
+        var filmCrew = new FilmCrew();
+        filmCrew.setRole("some role");
+        filmCrew.setName("actor name");
+        filmCrew.setSurname("actor surname");
+
+
+        var filmCrewSet = new HashSet<FilmCrew>();
+        filmCrewSet.add(filmCrew);
+        movie.setFilmCrews(filmCrewSet);
+
+
+        var requestContent = objectMapper.writeValueAsString(movie);
+
+
+        movie.setId(movieId);
+        actor.setId(actorId);
+
+        filmCrew.setId(filmCrewId);
+
+        filmCrew.setId(filmCrewId);
+
+        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
+
+        mockMvc.perform(post("/movies/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent))
+            .andExpect(status().isOk())
+            .andExpect(content().string(expectedResponse));
+
+        var answer1 = jdbcTemplate.queryForObject("select EXISTS(select 1 from movie where id = 1003)", Boolean.class);
+        Assertions.assertEquals(Boolean.TRUE, answer1);
+
+
+        var answer3 = jdbcTemplate.queryForObject("select EXISTS( select 1 from actor where id = 1002)", Boolean.class);
+        Assertions.assertEquals(Boolean.TRUE, answer3);
+
+        var answer4 = jdbcTemplate.queryForObject("select EXISTS( select 1 from film_crew where id = 1001)", Boolean.class);
+        Assertions.assertEquals(Boolean.TRUE, answer4);
+
+        var answer5 = jdbcTemplate.queryForObject("select person_id from actor where id = 1002", Integer.class);
+
+        var answer6 = jdbcTemplate.queryForObject("select person_id from film_crew where id = 1001",Integer.class);
+
+        assert answer5 != null;
+        assert answer6 != null;
+        Assertions.assertEquals(answer5, answer6);
+
+        var answer7 = jdbcTemplate.queryForObject("SELECT count(*) FROM person",Integer.class);
+
+        Assertions.assertEquals(answer7, Integer.valueOf(1));
+
+    }
 
     @Test
     public void deleteMoviesNotSuccess() throws Exception {
