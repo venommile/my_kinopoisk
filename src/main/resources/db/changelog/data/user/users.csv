@@ -1,3 +1,3 @@
-id;login;password;role;status
-1;admin;$2y$10$66hb73xCfrLz0jmynbhYU.YAhNjXkwp7DZPiRE.vvY6EL3SdUOmKG;ADMIN;ACTIVE
-2;user;$2y$10$A41xKwcwBff9RxtZckFdj.lqppjZI5a.2QLZSFZX1QhFDo5bG8dg.;USER;ACTIVE
+id;login;user_name;password;role;status
+1;admin;admin_name;$2y$10$66hb73xCfrLz0jmynbhYU.YAhNjXkwp7DZPiRE.vvY6EL3SdUOmKG;ADMIN;ACTIVE
+2;user;user_name;$2y$10$A41xKwcwBff9RxtZckFdj.lqppjZI5a.2QLZSFZX1QhFDo5bG8dg.;USER;ACTIVE

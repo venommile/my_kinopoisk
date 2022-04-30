@@ -10,11 +10,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "USER")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1905122041950251207L;
@@ -24,6 +26,9 @@ public class User implements Serializable {
     private Long id;
     @Column(unique = true)
     private String login;
+
+    private String userName;
+
     private String password;
     @Enumerated(value = EnumType.STRING)
     private Role role;

@@ -20,6 +20,7 @@
             <column name="password" type="varchar(255)"/>
             <column name="role" type="varchar(255)"/>
             <column name="status" type="varchar(255)"/>
+            <column name="user_name" type="varchar(100)"/>
 
 
         </loadData>

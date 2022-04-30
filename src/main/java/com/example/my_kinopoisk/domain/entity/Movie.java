@@ -56,10 +56,9 @@ public class Movie {
     private Set<FilmCrew> filmCrews = new HashSet<>();
 
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//
-//    private Set<Rating> ratings = new HashSet<>();
-
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "movie_id")
+    private Set<Review> reviews = new HashSet<>();
 
     public void addGenre(Genre genre) {
         genres.add(genre);
@@ -69,21 +68,10 @@ public class Movie {
         actors.add(actor);
     }
 
-//    public void addRating(Rating rating) {
-//        ratings.add(rating);
-//    }
-
     public void addFilmCrew(FilmCrew filmCrew) {
         filmCrews.add(filmCrew);
     }
 
-
-    // to Servece
-
-
-
-
-
-    /* List of  Poster URL's */
+    public void addReview(Review review){ reviews.add(review);}
 
 }

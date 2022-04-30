@@ -80,7 +80,6 @@ public class PersonService {
     }
 
 
-
     /*
     You should at first compile to generate Person_ class
 
@@ -104,7 +103,7 @@ public class PersonService {
     private Specification<Person> searchFirstName(String searchRequest) {
         var words = searchRequest.split("\\s+", 2);
         String name = null;
-        if(words.length > 0 ){
+        if (words.length > 0) {
             name = words[0];
         }
         System.out.println(name);
