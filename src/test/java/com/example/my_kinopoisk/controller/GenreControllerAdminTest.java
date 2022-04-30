@@ -119,6 +119,7 @@ public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
 
         mockMvc.perform(delete("/genre/1"))
             .andExpect(status().isNoContent());
+        // to repository
 
         answer = jdbcTemplate.queryForObject("select EXISTS(select 1 from genre where id = 1)", Boolean.class);
         Assertions.assertEquals(Boolean.FALSE, answer);

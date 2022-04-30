@@ -35,7 +35,6 @@ public class PersonService {
     }
 
     public void deletePerson(Long id) {
-        getPerson(id);
         personRepository.deleteById(id);
     }
 
@@ -71,45 +70,47 @@ public class PersonService {
             );
     }
 
-    private Page<Person> searchPerson(String firstName, String lastName, Pageable pageable) {
+    private Page<Person> searchPerson(String searchRequest, Pageable pageable) {
         return personRepository.findAll(Specification.where(
-            hasFirstName(firstName)).and(hasLastName(lastName)), pageable);
-    }
-
-    public List<PersonInListDto> search(String firstName, String lastName, Pageable pageable) {
-        return searchPerson(firstName, lastName, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
+            searchFirstName(searchRequest)).or(searchLastName(searchRequest)), pageable);
     }
 
     public List<PersonInListDto> search(String searchRequest, Pageable pageable) {
-        var words = searchRequest.split("\\s+", 2);
-
-        if (words.length > 1) {
-            return search(words[0], words[1], pageable);
-        } else {
-            var answer = search(words[0], null, pageable);
-            answer.addAll(search(null, words[0], pageable));
-
-            //Можем вернуть больше объектов,чем надо.Но как пофиксить? хз
-            return answer;
-        }
-
+        return searchPerson(searchRequest, pageable).map(personMapper::toPersonInListDto).stream().collect(Collectors.toList());
     }
+
 
 
     /*
     You should at first compile to generate Person_ class
 
      */
-    private Specification<Person> hasLastName(String surname) {
+    private Specification<Person> searchLastName(String searchRequest) {
+        var words = searchRequest.split("\\s+", 2);
+        String surname = null;
+        if (words.length > 1) {
+            surname = words[1];
+        } else if (words.length > 0) {
+            surname = words[0];
+        }
+
         if (surname != null && surname.length() > 0) {
-            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.surname)), "%" + surname.toUpperCase() + "%");
+            String finalSurname = surname;
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.surname)), "%" + finalSurname.toUpperCase() + "%");
         }
         return null;
     }
 
-    private Specification<Person> hasFirstName(String name) {
+    private Specification<Person> searchFirstName(String searchRequest) {
+        var words = searchRequest.split("\\s+", 2);
+        String name = null;
+        if(words.length > 0 ){
+            name = words[0];
+        }
+        System.out.println(name);
         if (name != null && name.length() > 0) {
-            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.name)), "%" + name.toUpperCase() + "%");
+            String finalName = name;
+            return (root, query, cb) -> cb.like(cb.upper(root.get(Person_.name)), "%" + finalName.toUpperCase() + "%");
         }
         return null;
     }

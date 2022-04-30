@@ -22,6 +22,7 @@ public class MyKinopoiskApplicationTests {
 
     @Container
     public static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:14.1").withReuse(true);
+
     @Autowired
     SpringLiquibase liquibase;
     @Autowired

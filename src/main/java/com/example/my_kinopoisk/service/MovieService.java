@@ -40,7 +40,7 @@ public class MovieService {
 
         var foundMovies = getMovies(title, pageable);
 
-        if (!genreDtoList.isEmpty()) {
+        if (genreDtoList != null && !genreDtoList.isEmpty()) {
             List<Movie> moviesWithRequiredGenre = new ArrayList<>();
             for (var movie : foundMovies) {
                 for (var foundGenre : movie.getGenres()) {
