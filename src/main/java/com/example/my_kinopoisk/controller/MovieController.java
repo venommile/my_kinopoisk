@@ -66,12 +66,4 @@ public class MovieController {
         return ResponseEntity.ok(binderService.bindMovieGenre(movieId, genreId));
     }
 
-
-//    @PutMapping("/{movieId}/actor/{actorId}")
-//    public Movie actorToMovie(@PathVariable Long movieId,
-//                              @PathVariable Long actorId){
-//        var movie = movieService.getMovie(movieId);
-//
-//    }
-
 }

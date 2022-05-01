@@ -1,6 +1,7 @@
 package com.example.my_kinopoisk.domain.entity;
 
 import com.example.my_kinopoisk.validation.OnCreate;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(uniqueConstraints =
 @UniqueConstraint(name = "FullName", columnNames = {"name", "surname"}))
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Person {
 
     @Id

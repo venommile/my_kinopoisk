@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.NoPermissionException;
 import javax.validation.ConstraintViolationException;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
@@ -18,12 +20,12 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler({GenreNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(GenreNotFoundException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+        return ResponseEntity.status(NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler({MovieNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(MovieNotFoundException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+        return ResponseEntity.status(NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler({PersonNotFoundException.class})
@@ -40,5 +42,10 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> onMethodArgumentNotValidException(EmptyResultDataAccessException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse("Entity with this id does not exists"));
+    }
+
+    @ExceptionHandler(NoPermissionException.class)
+    public ResponseEntity<ErrorResponse> onMethodArgumentNotValidException(NoPermissionException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 }

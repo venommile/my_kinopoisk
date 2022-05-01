@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 
-public interface GenreRepository extends JpaRepository<Genre, Long>, JpaSpecificationExecutor<Genre> {
+public interface GenreRepository extends JpaRepository<Genre, Long> {
     Optional<Genre> findByTitle(String title);
 }

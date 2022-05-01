@@ -23,6 +23,7 @@ public interface MovieMapper {
 
     MoviePersonPageDto toInPersonPageDto(Movie movie);
 
+
     MovieViewDto toViewDto(Movie movie);
 
     Movie toEntity(MovieViewDto movieDto);

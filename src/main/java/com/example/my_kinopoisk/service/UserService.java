@@ -13,8 +13,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserDto getUser(String login) {
-        return userRepository.findByLogin(login)
+    public UserDto getUser(String userName) {
+        return userRepository.findByUserName(userName)
             .map(userMapper::toDto)
             .orElseThrow();
     }

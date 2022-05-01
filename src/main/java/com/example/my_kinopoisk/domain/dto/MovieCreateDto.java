@@ -1,5 +1,6 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MovieCreateDto implements Serializable {
     private final String title;
     @Min(0)

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
+public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 }

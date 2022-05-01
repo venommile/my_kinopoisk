@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 @Getter
 public enum Role {
     USER(Set.of(Permission.READ)),
-    ADMIN(Set.of(Permission.READ, Permission.WRITE));
+    MODERATOR(Set.of(Permission.READ, Permission.DELETE_COMMENTS)),
+    ADMIN(Set.of(Permission.READ, Permission.DELETE_COMMENTS, Permission.WRITE));
+
 
     private final Set<Permission> permissions;
 

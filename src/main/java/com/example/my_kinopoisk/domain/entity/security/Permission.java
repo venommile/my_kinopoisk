@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum Permission {
     READ("read"),
+    DELETE_COMMENTS("delete_comments"),
     WRITE("write");
 
     private final String permission;

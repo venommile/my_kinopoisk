@@ -1,6 +1,7 @@
 package com.example.my_kinopoisk.domain.entity;
 
 import com.example.my_kinopoisk.validation.OnCreate;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -20,12 +20,13 @@ public class SecurityUser implements UserDetails {
 
     private final String username;
     private final String password;
+    private final String login;
     private final List<SimpleGrantedAuthority> authorities;
     private final boolean isActive;
 
     public static UserDetails fromUser(User user) {
         return new org.springframework.security.core.userdetails.User(
-            user.getLogin(), user.getPassword(),
+            user.getUserName(), user.getPassword(),
             user.getStatus().equals(Status.ACTIVE),
             user.getStatus().equals(Status.ACTIVE),
             user.getStatus().equals(Status.ACTIVE),
@@ -48,6 +49,8 @@ public class SecurityUser implements UserDetails {
     public String getUsername() {
         return username;
     }
+
+    public String getLogin(){ return login;}
 
     @Override
     public boolean isAccountNonExpired() {

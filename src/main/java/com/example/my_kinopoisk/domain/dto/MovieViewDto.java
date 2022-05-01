@@ -1,5 +1,6 @@
 package com.example.my_kinopoisk.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Getter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MovieViewDto implements Serializable {
     private final Long id;
     private final String title;
@@ -21,4 +23,5 @@ public class MovieViewDto implements Serializable {
     private final Set<GenreDto> genres;
     private final Set<ActorMovieViewDto> actors;
     private final Set<FilmCrewMovieViewDto> filmCrews;
+    private final Set<ReviewViewDto> reviews;
 }

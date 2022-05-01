@@ -2,6 +2,7 @@ package com.example.my_kinopoisk.domain.entity;
 
 import com.example.my_kinopoisk.domain.entity.security.User;
 import com.example.my_kinopoisk.validation.OnCreate;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -26,23 +28,21 @@ import java.time.OffsetDateTime;
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Null(groups = OnCreate.class)
 
-    @Column(name = "review_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_name", referencedColumnName = "userName")
     private User user;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
-
     @Column(name = "user_name", insertable = false, updatable = false)
-    private String username;
+    private String userName;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -62,5 +62,6 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
 
 }
