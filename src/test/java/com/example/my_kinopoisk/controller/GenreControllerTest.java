@@ -4,10 +4,10 @@ package com.example.my_kinopoisk.controller;
 import com.example.my_kinopoisk.MyKinopoiskApplicationTests;
 import com.example.my_kinopoisk.domain.entity.Genre;
 import com.example.my_kinopoisk.message.ErrorResponse;
+import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -29,30 +30,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@WithMockUser(username = "admin", authorities = {"read", "write"})
-public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
+@Transactional
+public class GenreControllerTest extends MyKinopoiskApplicationTests {
 
     String genreNotFound = "Genre was not found";
 
 
     ErrorResponse genreNotFoundError;
 
+
     String genreNotFoundMessage;
 
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private GenreRepository genreRepository;
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private GenreMapper genreMapper;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
-    @AfterEach
-    public void clean() {
-        cleanTables();
-    }
 
     @PostConstruct
     void initMessages() throws JsonProcessingException {
@@ -61,7 +61,9 @@ public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
     }
 
     @Test
-    public void saveGenreSuccess() throws Exception {
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    public void saveGenreSuccessAdmin() throws Exception {
         var genre = new Genre();
         genre.setTitle("hdsfgihd");
         var requestContent = objectMapper.writeValueAsString(genre);
@@ -78,13 +80,13 @@ public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
     }
 
     @Test
-    public void saveGenreUnSuccess() throws Exception {
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    public void saveGenreUnSuccessAdmin() throws Exception {
         var genre = new Genre();
-        genre.setTitle("hdsfgihd");
+        genre.setTitle("title");
         genre.setId(1000L);
         var requestContent = objectMapper.writeValueAsString(genre);
-
-        var expectedResponse = objectMapper.writeValueAsString(genre);
 
         mockMvc.perform(post("/genre")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,8 +95,81 @@ public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
     }
 
     @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    public void getGenresAdmin() throws Exception {
+        var genre = new Genre();
+        genre.setId(1000L);
+        genre.setTitle("title");
+        genreRepository.save(genre);
+
+        var genreList = List.of(genreMapper.toDto(genre));
+
+        var genrePage = new PageImpl<>(genreList);
+
+        var expectedResponse = objectMapper.writeValueAsString(genrePage);
+
+        mockMvc.perform(get("/genre"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(expectedResponse));
+    }
+
+
+    @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    public void deleteGenreSuccessAdmin() throws Exception {
+        var genre = new Genre();
+        genre.setId(1000L);
+        genre.setTitle("title");
+
+        genreRepository.save(genre);
+
+        Assertions.assertEquals(genreRepository.count(), 1L);
+
+
+        mockMvc.perform(delete("/genre/1000"))
+            .andExpect(status().isNoContent());
+        // to repository
+        Assertions.assertEquals(genreRepository.count(), 0L);
+
+
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    public void deleteGenreNotSuccessAdmin() throws Exception {
+
+        mockMvc.perform(delete("/genre/1"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string(genreNotFoundMessage));
+
+        Assertions.assertEquals(genreRepository.count(), 0L);
+
+    }
+
+
+    @Test
+    @Transactional
+    @WithMockUser(username = "user", authorities = {"read"})
+    public void saveGenreSuccessUser() throws Exception {
+        var genre = new Genre();
+        genre.setTitle("hdsfgihd");
+        var requestContent = objectMapper.writeValueAsString(genre);
+
+        mockMvc.perform(post("/genre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent))
+            .andExpect(status().isForbidden());
+
+    }
+
+
+    @Test
+    @WithMockUser(username = "user", authorities = {"read"})
     @Sql(statements = "insert into genre(id, title) values(1,'title')")
-    public void getGenres() throws Exception {
+    public void getGenresUser() throws Exception {
         var genre = new Genre();
         genre.setId(1L);
         genre.setTitle("title");
@@ -112,29 +187,9 @@ public class GenreControllerAdminTest extends MyKinopoiskApplicationTests {
 
 
     @Test
-    @Sql(statements = "insert into genre(id, title) values(1,'title')")
-    public void deleteGenreSuccess() throws Exception {
-        var answer = jdbcTemplate.queryForObject("select EXISTS(select 1 from genre where id = 1)", Boolean.class);
-        Assertions.assertEquals(Boolean.TRUE, answer);
-
+    @WithMockUser(username = "user", authorities = {"read"})
+    public void deleteGenreSuccessUser() throws Exception {
         mockMvc.perform(delete("/genre/1"))
-            .andExpect(status().isNoContent());
-        // to repository
-
-        answer = jdbcTemplate.queryForObject("select EXISTS(select 1 from genre where id = 1)", Boolean.class);
-        Assertions.assertEquals(Boolean.FALSE, answer);
-
-    }
-
-    @Test
-    public void deleteGenreNotSuccess() throws Exception {
-
-        mockMvc.perform(delete("/genre/1"))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(genreNotFoundMessage));
-
-        var answer = jdbcTemplate.queryForObject("select EXISTS(select 1 from genre where id = 1)", Boolean.class);
-        Assertions.assertEquals(Boolean.FALSE, answer);
-
+            .andExpect(status().isForbidden());
     }
 }

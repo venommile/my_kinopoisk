@@ -101,6 +101,7 @@ public class MovieService {
                 movie.getActors()
             )
         );
+
         movie.setGenres(
             genreService.saveAndBindGenres(
                 movie.getGenres()
