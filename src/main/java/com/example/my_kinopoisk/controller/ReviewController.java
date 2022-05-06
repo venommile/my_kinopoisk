@@ -31,7 +31,7 @@ public class ReviewController {
     @PreAuthorize("hasAuthority('read')")
     @Validated(OnCreate.class)
     public ResponseEntity<Review> saveReview(@Valid @RequestBody Review review, Principal principal) {
-        var user = new User();
+        var user = new User();//to service
         user.setId(0L);//без дефолтного значения  не работает,хотя связываю по другой колонке
         user.setUserName(principal.getName());
 

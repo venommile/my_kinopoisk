@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1651845378321-3" author="galts (generated)">
+        <addUniqueConstraint columnNames="USER_name" constraintName="uc_USER_USERname" tableName="USER"/>
+    </changeSet>
+    <changeSet id="1651845378321-5" author="galts (generated)">
+        <dropForeignKeyConstraint baseTableName="REVIEW" constraintName="FK_REVIEW_ON_USER_NAME"/>
+    </changeSet>
+    <changeSet id="1651845378321-1" author="galts (generated)">
+        <dropColumn columnName="USER_name" tableName="review"/>
+    </changeSet>
+    <changeSet id="1651845378321-2" author="galts (generated)">
+        <addColumn tableName="review">
+            <column name="USER_name" type="BIGINT">
+                <constraints foreignKeyName="FK_REVIEW_ON_USER_NAME" references="USER(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

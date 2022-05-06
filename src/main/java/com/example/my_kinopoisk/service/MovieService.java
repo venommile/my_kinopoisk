@@ -4,13 +4,19 @@ import com.example.my_kinopoisk.domain.dto.GenreDto;
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
+import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
+import com.example.my_kinopoisk.domain.entity.Movie_;
+import com.example.my_kinopoisk.domain.entity.Person;
+import com.example.my_kinopoisk.domain.entity.Person_;
 import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,6 +107,7 @@ public class MovieService {
                 movie.getActors()
             )
         );
+
         movie.setGenres(
             genreService.saveAndBindGenres(
                 movie.getGenres()

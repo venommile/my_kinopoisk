@@ -17,9 +17,11 @@ public class ActorService {
 
     public Set<Actor> saveAndBindPerson(Set<Actor> actors) {
         Set<Actor> saveActors = new HashSet<>();
-        for (var actor : actors) {
-            actor.setPerson(personService.savePersonIfExists(actor));
-            saveActors.add(actorRepository.save(actor));
+        if (actors != null) {
+            for (var actor : actors) {
+                actor.setPerson(personService.savePersonIfExists(actor));
+                saveActors.add(actorRepository.save(actor));
+            }
         }
         return saveActors;
     }

@@ -17,9 +17,12 @@ public class FilmCrewService {
 
     public Set<FilmCrew> saveAndBindPerson(Set<FilmCrew> filmCrews) {
         Set<FilmCrew> saveFilmCrews = new HashSet<>();
-        for (var filmCrew : filmCrews) {
-            filmCrew.setPerson(personService.savePersonIfExists(filmCrew));
-            saveFilmCrews.add(filmCrewRepository.save(filmCrew));
+        if (filmCrews != null) {
+            for (var filmCrew : filmCrews) {
+                filmCrew.setPerson(personService.savePersonIfExists(filmCrew));
+                saveFilmCrews.add(filmCrewRepository.save(filmCrew));
+            }
+
         }
         return saveFilmCrews;
     }
