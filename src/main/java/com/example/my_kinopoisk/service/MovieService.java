@@ -4,23 +4,20 @@ import com.example.my_kinopoisk.domain.dto.GenreDto;
 import com.example.my_kinopoisk.domain.dto.MovieCreateDto;
 import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
-import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.domain.entity.Movie_;
-import com.example.my_kinopoisk.domain.entity.Person;
-import com.example.my_kinopoisk.domain.entity.Person_;
 import com.example.my_kinopoisk.exception.MovieNotFoundException;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,29 +34,39 @@ public class MovieService {
     private final FilmCrewService filmCrewService;
     private final GenreMapper genreMapper;
 
-    public List<Movie> getMovies(String title, Pageable pageable) {//to ViewDto?
-        return new ArrayList<>(movieRepository.findByTitleContainingIgnoreCase(title));
-    }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {//optimize?
 
-        var foundMovies = getMovies(title, pageable);
-
-        if (genreDtoList != null && !genreDtoList.isEmpty()) {
-            List<Movie> moviesWithRequiredGenre = new ArrayList<>();
-            for (var movie : foundMovies) {
-                for (var foundGenre : movie.getGenres()) {
-                    if (genreDtoList.contains(genreMapper.toDto(foundGenre))) {
-                        moviesWithRequiredGenre.add(movie);
-                    }
-                }
-            }
-            foundMovies = moviesWithRequiredGenre;
-        }
-
+        var foundMovies = movieRepository.findAll(
+            Specification.where(titleContainingIgnoreCase(title).and(containsGenre(genreDtoList))), pageable);
 
         return foundMovies.stream().map(movieMapper::toInListDto).collect(Collectors.toList());
+
+    }
+
+    public Specification<Movie> containsGenre(List<GenreDto> genreDtoList) {
+        if (genreDtoList == null || genreDtoList.isEmpty()) {
+            return null;
+        }
+
+        var genres = genreDtoList.stream().map(genreMapper::toEntity).collect(Collectors.toList());
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for (var genre : genres) {
+                predicates.add(cb.isMember(genre, root.get(Movie_.genres)));
+            }
+            return cb.or(predicates.toArray(new Predicate[]{}));
+
+        };
+
+    }
+
+    public Specification<Movie> titleContainingIgnoreCase(String title) {
+        if (title == null || title.isBlank()) return null;
+
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.like(criteriaBuilder.upper(root.get(Movie_.title)), "%" + title.toUpperCase() + "%");
+        };
 
     }
 
