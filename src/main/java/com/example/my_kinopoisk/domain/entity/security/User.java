@@ -1,9 +1,11 @@
 package com.example.my_kinopoisk.domain.entity.security;
 
 import com.example.my_kinopoisk.domain.entity.Review;
+import com.example.my_kinopoisk.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.implementation.bind.annotation.Empty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,9 +16,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Null(groups = OnCreate.class)
     private Long id;
     @Column(unique = true)
     private String login;
@@ -41,8 +44,10 @@ public class User implements Serializable {
 
     private String password;
     @Enumerated(value = EnumType.STRING)
+    @Null(groups = OnCreate.class)
     private Role role;
     @Enumerated(value = EnumType.STRING)
+    @Null(groups = OnCreate.class)
     private Status status;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "user")

@@ -12,4 +12,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByUserName(String userName);
 
+    boolean existsUserByLoginOrUserName(String login, String userName);
+
 }

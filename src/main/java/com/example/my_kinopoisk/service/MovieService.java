@@ -35,7 +35,7 @@ public class MovieService {
     private final GenreMapper genreMapper;
 
 
-    public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {//optimize?
+    public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {
 
         var foundMovies = movieRepository.findAll(
             Specification.where(titleContainingIgnoreCase(title).and(containsGenre(genreDtoList))), pageable);
@@ -86,6 +86,7 @@ public class MovieService {
         return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public Movie saveMovie(Movie movie) {
         return movieRepository.save(movie);
     }
@@ -129,10 +130,11 @@ public class MovieService {
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteMovie(Long id) {
-        getMovie(id);
         movieRepository.deleteById(id);
     }
+
 
 
     public List<MovieInListDto> getMoviesInListDto(Pageable pageable) {

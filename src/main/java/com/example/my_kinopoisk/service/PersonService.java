@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public PersonViewDto savePerson(PersonCreateDto personDto) {
         var foundPerson = personRepository.findByNameAndSurname(personDto.getName(), personDto.getSurname());
         var person = personMapper.toEntity(personDto);
@@ -63,6 +67,7 @@ public class PersonService {
         return getPersons(pageable).stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public Person savePersonIfExists(ParticipantFilm participant) {
         return personRepository.findByNameAndSurname(participant.getName(), participant.getSurname())
             .orElseGet(
