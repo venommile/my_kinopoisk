@@ -22,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,27 +33,34 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @AutoConfigureMockMvc
 @Transactional
-@Rollback
 public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
     String movieNotFound = "Movie was not found";
     String genreNotFound = "Genre was not found";
+
+    String entityNotExists = "Entity with this id does not exists";
+
+    ErrorResponse entityNotExistsError;
 
     ErrorResponse movieNotFoundError;
     ErrorResponse genreNotFoundError;
 
     String movieNotFoundMessage;
     String genreNotFoundMessage;
+
+    String entityNotExistsMessage;
 
     @Autowired
     private MockMvc mockMvc;
@@ -80,21 +85,17 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Autowired
     private GenreRepository genreRepository;
 
-    @PostConstruct
-    void initMessages() throws JsonProcessingException {
-        movieNotFoundError = new ErrorResponse(movieNotFound);
-        genreNotFoundError = new ErrorResponse(genreNotFound);
-
-        movieNotFoundMessage = objectMapper.writeValueAsString(movieNotFoundError);
-        genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
+    public Actor getActorWtihSomeData(){
+        var actor = new Actor();
+        actor.setSurname("actor surname");
+        actor.setName("actor name");
+        actor.setRole("role");
+        return actor;
     }
 
 
-    @WithMockUser(username = "admin", authorities = {"read", "write"})
-    @Test
-    @Transactional
-    public void getMovieFoundAdmin() throws Exception {
-        var movieId = 1000L;
+    public Movie getOneMovieWithSomeData(){
+        var movieId = 1L;
         var movie = new Movie();
         movie.setId(movieId);
         movie.setTitle("The Terminator");
@@ -102,11 +103,43 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         movie.setCountryOfProduction("Country");
         movie.setDescription("desc");
         movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        return movie;
+    }
 
-        movieRepository.save(movie);
+    public FilmCrew getFilmCrewWithData(){
+        var filmCrew = new FilmCrew();
+        filmCrew.setRole("some role");
+        filmCrew.setName("some name");
+        filmCrew.setSurname("some surname");
+        return filmCrew;
+    }
+
+    public Movie saveOneMovieWithSomeData(){
+        return movieRepository.save(getOneMovieWithSomeData());
+    }
+
+    @PostConstruct
+    void initMessages() throws JsonProcessingException {
+        movieNotFoundError = new ErrorResponse(movieNotFound);
+        genreNotFoundError = new ErrorResponse(genreNotFound);
+
+        entityNotExistsError = new ErrorResponse(entityNotExists);
+
+        movieNotFoundMessage = objectMapper.writeValueAsString(movieNotFoundError);
+        genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
+
+        entityNotExistsMessage = objectMapper.writeValueAsString(entityNotExistsError);
+    }
+
+
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    @Test
+    @Transactional
+    public void getMovieFoundAdmin() throws Exception {
+        var movie = saveOneMovieWithSomeData();
         var expectedResponse = objectMapper.writeValueAsString(movie);
 
-        mockMvc.perform(get("/movies/" + 1000))
+        mockMvc.perform(get("/movies/" + movie.getId()))
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
 
@@ -126,16 +159,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void getMoviesFoundAdmin() throws Exception {
-        var movieId = 1000L;
-        var movie = new Movie();
-        movie.setId(movieId);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
-
-        movieRepository.save(movie);
+        var movie = saveOneMovieWithSomeData();
 
         var movieList = new ArrayList<MovieInListDto>();
 
@@ -153,17 +177,12 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void saveMovieSuccessWithoutInnerEntitiesAdmin() throws Exception {
-        var movie = new Movie();
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = getOneMovieWithSomeData();
 
         Assertions.assertEquals(0L, genreRepository.count());
 
         var requestContent = objectMapper.writeValueAsString(movie);
-        movie.setId(1000L);
+        movie.setId(3L);
 
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
 
@@ -173,7 +192,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
 
-        Assertions.assertEquals(movieRepository.getById(1000L).getTitle(), movie.getTitle());
+       // Assertions.assertEquals(movieRepository.getById(1000L).getTitle(), movie.getTitle());
 
     }
 
@@ -181,24 +200,13 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void saveMovieWithInnerEntitiesAdmin() throws Exception {
-        Long movieId = 1005L;
-        Long genreId = 1004L;
-        Long actorId = 1003L;
-        Long filmCrewId = 1001L;
-        var movie = new Movie();
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+
+        var movie = getOneMovieWithSomeData();
 
         var genre = new Genre();
         genre.setTitle("drama");
 
-        var actor = new Actor();
-        actor.setSurname("actor surname");
-        actor.setName("actor name");
-        actor.setRole("role");
+        var actor = getActorWtihSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -208,10 +216,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         genreSet.add(genre);
         movie.setGenres(genreSet);
 
-        var filmCrew = new FilmCrew();
-        filmCrew.setRole("some role");
-        filmCrew.setName("some name");
-        filmCrew.setSurname("some surname");
+        var filmCrew = getFilmCrewWithData();
         var filmCrewSet = new HashSet<FilmCrew>();
         filmCrewSet.add(filmCrew);
         movie.setFilmCrews(filmCrewSet);
@@ -220,30 +225,25 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         var requestContent = objectMapper.writeValueAsString(movie);
 
 
-        genre.setId(genreId);
-        movie.setId(movieId);
-        actor.setId(actorId);
-
-        filmCrew.setId(filmCrewId);
-
-        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
 
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
             .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(jsonPath("$.title").value("The Terminator"))
+            .andExpect(jsonPath("$.actors", hasSize(1)))
+            .andExpect(jsonPath("$.filmCrews", hasSize(1)));
 
 
-        Assertions.assertEquals(movieRepository.getById(1005L).getTitle(), movie.getTitle());
+        Assertions.assertEquals(movieRepository.findAll().get(0).getTitle(), movie.getTitle());
 
-        Assertions.assertEquals(genreRepository.getById(1004L).getTitle(), genre.getTitle());
+        Assertions.assertEquals(genreRepository.findAll().get(0).getTitle(), genre.getTitle());
 
         Assertions.assertEquals(2L, personRepository.count());
 
-        Assertions.assertEquals(filmCrewRepository.getById(1001L).getRole(), filmCrew.getRole());
+        Assertions.assertEquals(filmCrewRepository.findAll().get(0).getRole(), filmCrew.getRole());
 
-        Assertions.assertEquals(actorRepository.getById(1003L).getRole(), actor.getRole());
+        Assertions.assertEquals(actorRepository.findAll().get(0).getRole(), actor.getRole());
 
     }
 
@@ -251,24 +251,13 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void saveMovieWithInnerEntitiesWhenTwoRolesAndOnePersonAdmin() throws Exception {
-        Long movieId = 1003L;
 
-        Long actorId = 1002L;
-        Long filmCrewId = 1001L;
-        var movie = new Movie();
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = getOneMovieWithSomeData();
 
         var genre = new Genre();
         genre.setTitle("drama");
 
-        var actor = new Actor();
-        actor.setSurname("actor surname");
-        actor.setName("actor name");
-        actor.setRole("role");
+        var actor =getActorWtihSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -289,29 +278,23 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         var requestContent = objectMapper.writeValueAsString(movie);
 
 
-        movie.setId(movieId);
-        actor.setId(actorId);
-
-        filmCrew.setId(filmCrewId);
-
-        filmCrew.setId(filmCrewId);
-
-        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
-
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
             .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(jsonPath("$.title").value("The Terminator"))
+            .andExpect(jsonPath("$.actors", hasSize(1)))
+            .andExpect(jsonPath("$.filmCrews", hasSize(1)));
 
-        Assertions.assertEquals(movieRepository.getById(1003L).getTitle(), movie.getTitle());
+        var movieInDb = movieRepository.findAll().get(0);
+        Assertions.assertEquals(movieInDb.getTitle(), movie.getTitle());
 
 
         Assertions.assertEquals(1L, personRepository.count());
 
-        Assertions.assertEquals(filmCrewRepository.getById(1001L).getRole(), filmCrew.getRole());
+        Assertions.assertEquals(filmCrewRepository.findAll().get(0).getRole(), filmCrew.getRole());
 
-        Assertions.assertEquals(actorRepository.getById(1002L).getRole(), actor.getRole());
+        Assertions.assertEquals(actorRepository.findAll().get(0).getRole(), actor.getRole());
 
     }
 
@@ -320,30 +303,21 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     public void deleteMoviesNotSuccessAdmin() throws Exception {
         mockMvc.perform(delete("/movies/" + 1))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string(entityNotExistsMessage));
     }
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     @Test
     @Transactional
     public void deleteMoviesSuccessAdmin() throws Exception {
-        var movieId = 1000L;
-        var movie = new Movie();
-        movie.setId(movieId);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
-
-        movieRepository.save(movie);
+       var movie =  saveOneMovieWithSomeData();
 
 
         Assertions.assertEquals(1L, movieRepository.count());
 
 
-        mockMvc.perform(delete("/movies/" + 1000))
+        mockMvc.perform(delete("/movies/" + movie.getId()))
             .andExpect(status().isNoContent());
 
         Assertions.assertEquals(0L, movieRepository.count());
@@ -355,28 +329,19 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     public void bindGenreToMovieSuccessAdmin() throws Exception {
 
-        var movieId = 1000L;
-        var genreId = 1001L;
 
-        var movie = new Movie();
-        movie.setId(movieId);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = getOneMovieWithSomeData();
 
         var genre = new Genre();
-        genre.setId(1001L);
         genre.setTitle("action");
-
-        movieRepository.save(movie);
+        genre = genreRepository.save(genre);
+        movie = movieRepository.save(movie);
         movie.setGenres(Set.of(genre));
-        genreRepository.save(genre);
+
 
 
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
-        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
+        mockMvc.perform(put("/movies/" + movie.getId() + "/genre/" + genre.getId()))
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
     }
@@ -402,22 +367,12 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     @Test
     @Transactional
-
     public void bindGenreToMovieNotSuccessGenreAdmin() throws Exception {
-        var movieId = 1000L;
+        var movieId = 1L;
 
+        saveOneMovieWithSomeData();
 
-        var movie = new Movie();
-        movie.setId(movieId);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
-
-        movieRepository.save(movie);
-
-        Long genreId = 1001L;
+        Long genreId = 1L;
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
             .andExpect(status().isNotFound())
@@ -429,13 +384,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @WithMockUser(username = "user", authorities = {"read"})
     @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void getMovieFoundUser() throws Exception {
-        var movie = new Movie();
-        movie.setId(1L);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = saveOneMovieWithSomeData();
 
         var expectedResponse = objectMapper.writeValueAsString(movie);
 
@@ -460,13 +409,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @WithMockUser(username = "user", authorities = {"read"})
     @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void getMoviesFoundUser() throws Exception {
-        var movie = new Movie();
-        movie.setId(1L);
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = saveOneMovieWithSomeData();
 
         var movieList = new ArrayList<MovieInListDto>();
 
@@ -484,12 +427,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
     public void saveMovieSuccessWithoutInnerEntitiesUser() throws Exception {
-        var movie = new Movie();
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = getOneMovieWithSomeData();
 
         Assertions.assertEquals(0L, movieRepository.count());
 
@@ -506,24 +444,12 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
     public void saveMovieWithInnerEntitiesUser() throws Exception {
-        Long movieId = 1005L;
-        Long genreId = 1004L;
-        Long actorId = 1003L;
-        Long filmCrewId = 1001L;
-        var movie = new Movie();
-        movie.setTitle("The Terminator");
-        movie.setAgeLimit(16);
-        movie.setCountryOfProduction("Country");
-        movie.setDescription("desc");
-        movie.setReleaseDate(LocalDate.parse("1984-10-26"));
+        var movie = saveOneMovieWithSomeData();
 
         var genre = new Genre();
         genre.setTitle("drama");
 
-        var actor = new Actor();
-        actor.setSurname("actor surname");
-        actor.setName("actor name");
-        actor.setRole("role");
+        var actor = getActorWtihSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -533,10 +459,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         genreSet.add(genre);
         movie.setGenres(genreSet);
 
-        var filmCrew = new FilmCrew();
-        filmCrew.setRole("some role");
-        filmCrew.setName("some name");
-        filmCrew.setSurname("some surname");
+        var filmCrew = getFilmCrewWithData();
         var filmCrewSet = new HashSet<FilmCrew>();
         filmCrewSet.add(filmCrew);
         movie.setFilmCrews(filmCrewSet);
@@ -544,7 +467,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         var requestContent = objectMapper.writeValueAsString(movie);
 
-        var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
 
         mockMvc.perform(post("/movies/")
                 .contentType(MediaType.APPLICATION_JSON)

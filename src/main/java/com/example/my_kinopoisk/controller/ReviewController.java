@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/save")
+    @PostMapping
     @PreAuthorize("hasAuthority('read')")
     @Validated(OnCreate.class)
     public ResponseEntity<Review> saveReview(@Valid @RequestBody Review review, Principal principal) {
@@ -39,7 +40,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.save(review));
     }
 
-    @PostMapping("/update")
+    @PutMapping
     @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<Review> updateReview(@Valid @RequestBody Review review, Principal principal) throws NoPermissionException {
         if (principal.getName().equals(review.getUser().getUserName())) {

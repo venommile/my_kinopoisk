@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -34,7 +35,7 @@ import java.util.Set;
 public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Null(groups = OnCreate.class)
     private Long id;
     @NotNull
@@ -51,13 +52,27 @@ public class Person {
     @Enumerated
     private Gender gender;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE,
+        CascadeType.PERSIST,
+        CascadeType.REMOVE
+    })
     private Set<Actor> actorRoles = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "person")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade ={
+        CascadeType.PERSIST,
+        CascadeType.MERGE,
+        CascadeType.PERSIST,
+        CascadeType.REMOVE
+    })
     private Set<FilmCrew> filmCrewRoles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "persons", cascade = {
+        CascadeType.DETACH,
+        CascadeType.MERGE,
+        CascadeType.REFRESH
+    })
     private Set<Genre> genres = new HashSet<>();
 
     public Person(ParticipantFilm participant) {

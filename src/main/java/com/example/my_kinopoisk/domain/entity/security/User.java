@@ -26,7 +26,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "USER")
+@Table(name = "user_security")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User implements Serializable {
 
@@ -40,6 +40,7 @@ public class User implements Serializable {
     private String login;
 
     @Column(unique = true)
+
     private String userName;
 
     private String password;

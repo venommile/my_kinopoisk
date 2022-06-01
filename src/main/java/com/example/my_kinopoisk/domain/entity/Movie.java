@@ -30,8 +30,9 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Movie {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Null(groups = OnCreate.class)
     private Long id;
     private String title;
@@ -44,16 +45,32 @@ public class Movie {
 
     private LocalDate releaseDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade =
+        {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH
+        }
+    )
     private Set<Genre> genres = new HashSet<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE,
+        CascadeType.PERSIST,
+        CascadeType.REMOVE
+    })
     @JoinColumn(name = "movie_id")
     private Set<Actor> actors = new HashSet<>();
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE,
+        CascadeType.PERSIST,
+        CascadeType.REMOVE
+    })
     @JoinColumn(name = "movie_id")
     private Set<FilmCrew> filmCrews = new HashSet<>();
 
@@ -63,6 +80,8 @@ public class Movie {
     private Set<Review> reviews = new HashSet<>();
 
     public void addGenre(Genre genre) {
+        if (!checkIfSetMutable(genres)) genres = new HashSet<>(genres);
+        System.out.println(genre.getTitle() + genre.getId());
         genres.add(genre);
     }
 
@@ -74,6 +93,12 @@ public class Movie {
         filmCrews.add(filmCrew);
     }
 
-    public void addReview(Review review){ reviews.add(review);}
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    public boolean checkIfSetMutable(Set set) {
+        return set instanceof HashSet;
+    }
 
 }

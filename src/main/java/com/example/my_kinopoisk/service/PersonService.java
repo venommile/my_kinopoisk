@@ -87,10 +87,6 @@ public class PersonService {
     }
 
 
-    /*
-    You should at first compile to generate Person_ class
-
-     */
     private Specification<Person> searchLastName(String searchRequest) {
         var words = searchRequest.split("\\s+", 2);
         String surname = null;

@@ -33,7 +33,7 @@ public class MovieController {
     private final MovieService movieService;
     private final BinderService binderService;
 
-    @GetMapping("")
+    @GetMapping
     @PreAuthorize("hasAuthority('read')")
     public Page<MovieInListDto> getMovies(@ParameterObject Pageable pageable) {
         return new PageImpl<>(movieService.getMoviesInListDto(pageable));
@@ -45,7 +45,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovieViewDto(id));
     }
 
-    @PostMapping("")
+    @PostMapping
     @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<MovieViewDto> saveMovie(@Valid @RequestBody MovieCreateDto movieDto) {

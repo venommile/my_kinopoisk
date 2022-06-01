@@ -31,7 +31,7 @@ import javax.validation.Valid;
 public class PersonController {
     private final PersonService personService;
 
-    @GetMapping("")
+    @GetMapping
     @PreAuthorize("hasAuthority('read')")
     public Page<PersonInListDto> getPersons(@ParameterObject Pageable pageable) {
         return new PageImpl<>(personService.getPersonsOnlyDto(pageable));
@@ -43,7 +43,7 @@ public class PersonController {
         return ResponseEntity.ok(personService.getPersonDto(id));
     }
 
-    @PostMapping("")
+    @PostMapping
     @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<PersonViewDto> savePerson(@Valid @RequestBody PersonCreateDto personDto) {

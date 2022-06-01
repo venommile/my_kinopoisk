@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -68,14 +69,12 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
         genre.setTitle("hdsfgihd");
         var requestContent = objectMapper.writeValueAsString(genre);
 
-        genre.setId(1000L);
-        var expectedResponse = objectMapper.writeValueAsString(genre);
 
         mockMvc.perform(post("/genre")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
             .andExpect(status().isOk())
-            .andExpect(content().string(expectedResponse));
+            .andExpect(jsonPath("$.title").value(genre.getTitle()));
 
     }
 
@@ -99,9 +98,8 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     public void getGenresAdmin() throws Exception {
         var genre = new Genre();
-        genre.setId(1000L);
         genre.setTitle("title");
-        genreRepository.save(genre);
+        genre  = genreRepository.save(genre);
 
         var genreList = List.of(genreMapper.toDto(genre));
 
@@ -123,12 +121,12 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
         genre.setId(1000L);
         genre.setTitle("title");
 
-        genreRepository.save(genre);
+        genre = genreRepository.save(genre);
 
         Assertions.assertEquals(genreRepository.count(), 1L);
 
 
-        mockMvc.perform(delete("/genre/1000"))
+        mockMvc.perform(delete("/genre/"+ genre.getId()))
             .andExpect(status().isNoContent());
         // to repository
         Assertions.assertEquals(genreRepository.count(), 0L);
@@ -167,6 +165,7 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
 
 
     @Test
+    @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
     @Sql(statements = "insert into genre(id, title) values(1,'title')")
     public void getGenresUser() throws Exception {
@@ -188,6 +187,7 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
 
     @Test
     @WithMockUser(username = "user", authorities = {"read"})
+    @Transactional
     public void deleteGenreSuccessUser() throws Exception {
         mockMvc.perform(delete("/genre/1"))
             .andExpect(status().isForbidden());

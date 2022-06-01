@@ -31,14 +31,14 @@ public class GenreController {
     private final GenreService genreService;
 
 
-    @PostMapping("")
+    @PostMapping
     @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<Genre> saveGenre(@Valid @RequestBody Genre genre) {
         return ResponseEntity.ok(genreService.saveGenre(genre));
     }
 
-    @GetMapping("")
+    @GetMapping
     @PreAuthorize("hasAuthority('read')")
     public Page<GenreDto> getGenres(@ParameterObject Pageable pageable) {
         return new PageImpl<>(genreService.getGenresListDto(pageable));

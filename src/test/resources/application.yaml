@@ -4,9 +4,6 @@ spring:
     hikari:
       max-lifetime: 600000
       connection-timeout: 250
-    dbcp2:
-      test-on-borrow: true
-      test-while-idle: true
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     generate-ddl: false

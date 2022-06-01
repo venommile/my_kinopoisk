@@ -56,24 +56,29 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
 
         personNotFoundMessage = objectMapper.writeValueAsString(personNotFoundError);
     }
-
-    @WithMockUser(username = "admin", authorities = {"read", "write"})
-    @Transactional
-    @Test
-    void getPersonAdmin() throws Exception {
+    public Person getPersonWithSomeData(){
         var person = new Person();
-        person.setId(1000L);
         person.setName("name");
         person.setSurname("surname");
         person.setBirthday(Date.valueOf(LocalDate.parse("1984-10-26")));
         person.setDescription("descr");
         person.setHeight(1.8f);
+        return person;
+    }
+    public Person savePersonWithSomeData(){
+        return personRepository.save(getPersonWithSomeData());
+    }
 
-        personRepository.save(person);
+    @WithMockUser(username = "admin", authorities = {"read", "write"})
+    @Transactional
+    @Test
+    void getPersonAdmin() throws Exception {
+
+        var person = savePersonWithSomeData();
 
         var expectedResponse = objectMapper.writeValueAsString(person);
 
-        mockMvc.perform(get("/persons/" + 1000))
+        mockMvc.perform(get("/persons/" + person.getId()))
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
     }
@@ -92,15 +97,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void getPersonsFoundAdmin() throws Exception {
-        var person = new Person();
-        person.setId(1000L);
-        person.setName("name");
-        person.setSurname("surname");
-        person.setBirthday(Date.valueOf(LocalDate.parse("1984-10-26")));
-        person.setDescription("descr");
-        person.setHeight(1.8f);
-
-        personRepository.save(person);
+        var person = savePersonWithSomeData();
 
         var personsList = new ArrayList<PersonInListDto>();
         personsList.add(personMapper.toPersonInListDto(person));
@@ -119,20 +116,12 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void deletePersonsSuccessAdmin() throws Exception {
-        var person = new Person();
-        person.setId(1000L);
-        person.setName("name");
-        person.setSurname("surname");
-        person.setBirthday(Date.valueOf(LocalDate.parse("1984-10-26")));
-        person.setDescription("descr");
-        person.setHeight(1.8f);
-
-        personRepository.save(person);
+        var person =savePersonWithSomeData();
 
         Assertions.assertEquals(1L, personRepository.count());
 
 
-        mockMvc.perform(delete("/persons/" + 1000))
+        mockMvc.perform(delete("/persons/" + person.getId()))
             .andExpect(status().isNoContent());
 
         Assertions.assertEquals(0L, personRepository.count());
@@ -143,13 +132,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void savePersonAdmin() throws Exception {
-        var person = new Person();
-        person.setId(1000L);
-        person.setName("name");
-        person.setSurname("surname");
-        person.setBirthday(Date.valueOf(LocalDate.parse("1984-10-26")));
-        person.setDescription("descr");
-        person.setHeight(1.8f);
+        var person = getPersonWithSomeData();
 
         Assertions.assertEquals(personRepository.count(), 0L);
 

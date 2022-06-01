@@ -64,9 +64,11 @@ public class MovieService {
     public Specification<Movie> titleContainingIgnoreCase(String title) {
         if (title == null || title.isBlank()) return null;
 
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(criteriaBuilder.upper(root.get(Movie_.title)), "%" + title.toUpperCase() + "%");
-        };
+        return (root, query, criteriaBuilder) ->
+            criteriaBuilder.like(
+                criteriaBuilder.upper(root.get(Movie_.title)), "%" + title.toUpperCase() + "%"
+            );
+
 
     }
 
@@ -86,13 +88,13 @@ public class MovieService {
         return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public Movie saveMovie(Movie movie) {
         return movieRepository.save(movie);
     }
 
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public MovieInListDto saveMovieDto(MovieInListDto movieInListDto) {
 
         return movieMapper.toInListDto(
@@ -102,7 +104,7 @@ public class MovieService {
         );
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public MovieViewDto saveMovieDto(MovieCreateDto movieDto) {
         var movie = movieMapper.toEntity(movieDto);
         movie.setFilmCrews(
@@ -134,7 +136,6 @@ public class MovieService {
     public void deleteMovie(Long id) {
         movieRepository.deleteById(id);
     }
-
 
 
     public List<MovieInListDto> getMoviesInListDto(Pageable pageable) {

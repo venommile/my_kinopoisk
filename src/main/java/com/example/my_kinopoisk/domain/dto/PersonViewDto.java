@@ -24,7 +24,7 @@ public class PersonViewDto implements Serializable {
     private final Float height;
     private final LocalDate birthday;
     private final Gender gender;
-    private final List<ActorInPersonDto> actorRoles;
-    private final List<FilmCrewInPerson> filmCrewRoles;
+    private final Set<ActorInPersonDto> actorRoles;
+    private final Set<FilmCrewInPerson> filmCrewRoles;
     private final Set<GenreDto> genres;
 }

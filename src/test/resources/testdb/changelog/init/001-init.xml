@@ -5,12 +5,12 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
     objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1651845519039-1" author="galts (generated)">
-        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1000"/>
+    <changeSet id="1654084980084-1" author="galts (generated)">
+        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
-    <changeSet id="1651845519039-2" author="galts (generated)">
+    <changeSet id="1654084980084-2" author="galts (generated)">
         <createTable tableName="actor">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_actor"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -20,9 +20,9 @@
             <column name="person_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-3" author="galts (generated)">
+    <changeSet id="1654084980084-3" author="galts (generated)">
         <createTable tableName="film_crew">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_filmcrew"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -32,15 +32,15 @@
             <column name="movie_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-4" author="galts (generated)">
+    <changeSet id="1654084980084-4" author="galts (generated)">
         <createTable tableName="genre">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_genre"/>
             </column>
             <column name="title" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-5" author="galts (generated)">
+    <changeSet id="1654084980084-5" author="galts (generated)">
         <createTable tableName="genre_persons">
             <column name="genres_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -50,9 +50,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-6" author="galts (generated)">
+    <changeSet id="1654084980084-6" author="galts (generated)">
         <createTable tableName="movie">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie"/>
             </column>
             <column name="title" type="VARCHAR(255)"/>
@@ -62,7 +62,7 @@
             <column name="release_date" type="DATE"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-7" author="galts (generated)">
+    <changeSet id="1654084980084-7" author="galts (generated)">
         <createTable tableName="movie_genres">
             <column name="genres_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movie_genres"/>
@@ -72,9 +72,9 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-8" author="galts (generated)">
+    <changeSet id="1654084980084-8" author="galts (generated)">
         <createTable tableName="person">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_person"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -85,9 +85,9 @@
             <column name="gender" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-9" author="galts (generated)">
+    <changeSet id="1654084980084-9" author="galts (generated)">
         <createTable tableName="review">
-            <column name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_review"/>
             </column>
             <column name="user_name" type="BIGINT"/>
@@ -103,7 +103,7 @@
             <column name="movie_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-10" author="galts (generated)">
+    <changeSet id="1654084980084-10" author="galts (generated)">
         <createTable tableName="user">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
@@ -115,61 +115,61 @@
             <column name="status" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1651845519039-11" author="galts (generated)">
+    <changeSet id="1654084980084-11" author="galts (generated)">
         <addUniqueConstraint columnNames="name, surname" constraintName="FullName" tableName="person"/>
     </changeSet>
-    <changeSet id="1651845519039-12" author="galts (generated)">
+    <changeSet id="1654084980084-12" author="galts (generated)">
         <addUniqueConstraint columnNames="title" constraintName="uc_genre_title" tableName="genre"/>
     </changeSet>
-    <changeSet id="1651845519039-13" author="galts (generated)">
+    <changeSet id="1654084980084-13" author="galts (generated)">
         <addUniqueConstraint columnNames="login" constraintName="uc_user_login" tableName="user"/>
     </changeSet>
-    <changeSet id="1651845519039-14" author="galts (generated)">
+    <changeSet id="1654084980084-14" author="galts (generated)">
         <addUniqueConstraint columnNames="user_name" constraintName="uc_user_username" tableName="user"/>
     </changeSet>
-    <changeSet id="1651845519039-15" author="galts (generated)">
+    <changeSet id="1654084980084-15" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="actor" constraintName="FK_ACTOR_ON_MOVIE"
                                  referencedColumnNames="id" referencedTableName="movie"/>
     </changeSet>
-    <changeSet id="1651845519039-16" author="galts (generated)">
+    <changeSet id="1654084980084-16" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="actor" constraintName="FK_ACTOR_ON_PERSON"
                                  referencedColumnNames="id" referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1651845519039-17" author="galts (generated)">
+    <changeSet id="1654084980084-17" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="film_crew"
                                  constraintName="FK_FILMCREW_ON_MOVIE" referencedColumnNames="id"
                                  referencedTableName="movie"/>
     </changeSet>
-    <changeSet id="1651845519039-18" author="galts (generated)">
+    <changeSet id="1654084980084-18" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="film_crew"
                                  constraintName="FK_FILMCREW_ON_PERSON" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1651845519039-19" author="galts (generated)">
+    <changeSet id="1654084980084-19" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="review" constraintName="FK_REVIEW_ON_MOVIE"
                                  referencedColumnNames="id" referencedTableName="movie"/>
     </changeSet>
-    <changeSet id="1651845519039-20" author="galts (generated)">
+    <changeSet id="1654084980084-20" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="user_name" baseTableName="review"
                                  constraintName="FK_REVIEW_ON_USER_NAME" referencedColumnNames="id"
                                  referencedTableName="user"/>
     </changeSet>
-    <changeSet id="1651845519039-21" author="galts (generated)">
+    <changeSet id="1654084980084-21" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="genres_id" baseTableName="genre_persons"
                                  constraintName="fk_genper_on_genre" referencedColumnNames="id"
                                  referencedTableName="genre"/>
     </changeSet>
-    <changeSet id="1651845519039-22" author="galts (generated)">
+    <changeSet id="1654084980084-22" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="persons_id" baseTableName="genre_persons"
                                  constraintName="fk_genper_on_person" referencedColumnNames="id"
                                  referencedTableName="person"/>
     </changeSet>
-    <changeSet id="1651845519039-23" author="galts (generated)">
+    <changeSet id="1654084980084-23" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="genres_id" baseTableName="movie_genres"
                                  constraintName="fk_movgen_on_genre" referencedColumnNames="id"
                                  referencedTableName="genre"/>
     </changeSet>
-    <changeSet id="1651845519039-24" author="galts (generated)">
+    <changeSet id="1654084980084-24" author="galts (generated)">
         <addForeignKeyConstraint baseColumnNames="movies_id" baseTableName="movie_genres"
                                  constraintName="fk_movgen_on_movie" referencedColumnNames="id"
                                  referencedTableName="movie"/>

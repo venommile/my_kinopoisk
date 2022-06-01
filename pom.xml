@@ -17,6 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <problem.version>0.27.1</problem.version>
     </properties>
 
     <dependencies>
@@ -121,6 +122,13 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem</artifactId>
+            <version>${problem.version}</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -145,6 +153,17 @@
             <version>42.3.4</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>jackson-datatype-problem</artifactId>
+            <version>${problem.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-gson</artifactId>
+            <version>${problem.version}</version>
+        </dependency>
 
     </dependencies>
 
