@@ -37,6 +37,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     String personNotFound = "Person was not found";
     ErrorResponse personNotFoundError;
     String personNotFoundMessage;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -56,7 +57,8 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
 
         personNotFoundMessage = objectMapper.writeValueAsString(personNotFoundError);
     }
-    public Person getPersonWithSomeData(){
+
+    public Person getPersonWithSomeData() {
         var person = new Person();
         person.setName("name");
         person.setSurname("surname");
@@ -65,7 +67,8 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
         person.setHeight(1.8f);
         return person;
     }
-    public Person savePersonWithSomeData(){
+
+    public Person savePersonWithSomeData() {
         return personRepository.save(getPersonWithSomeData());
     }
 
@@ -116,7 +119,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void deletePersonsSuccessAdmin() throws Exception {
-        var person =savePersonWithSomeData();
+        var person = savePersonWithSomeData();
 
         Assertions.assertEquals(1L, personRepository.count());
 

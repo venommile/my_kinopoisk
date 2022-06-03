@@ -85,7 +85,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Autowired
     private GenreRepository genreRepository;
 
-    public Actor getActorWtihSomeData(){
+    public Actor getActorWithSomeData(){
         var actor = new Actor();
         actor.setSurname("actor surname");
         actor.setName("actor name");
@@ -112,6 +112,15 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         filmCrew.setName("some name");
         filmCrew.setSurname("some surname");
         return filmCrew;
+    }
+
+    public Genre getGenre(){
+        var genre = new Genre();
+        genre.setTitle("action");
+        return genre;
+    }
+    public Genre saveGenre(){
+        return genreRepository.save(getGenre());
     }
 
     public Movie saveOneMovieWithSomeData(){
@@ -192,8 +201,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
 
-       // Assertions.assertEquals(movieRepository.getById(1000L).getTitle(), movie.getTitle());
-
     }
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})
@@ -203,10 +210,9 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         var movie = getOneMovieWithSomeData();
 
-        var genre = new Genre();
-        genre.setTitle("drama");
+        var genre = getGenre();
 
-        var actor = getActorWtihSomeData();
+        var actor = getActorWithSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -230,7 +236,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.title").value("The Terminator"))
+            .andExpect(jsonPath("$.title").value(movie.getTitle()))
             .andExpect(jsonPath("$.actors", hasSize(1)))
             .andExpect(jsonPath("$.filmCrews", hasSize(1)));
 
@@ -254,10 +260,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         var movie = getOneMovieWithSomeData();
 
-        var genre = new Genre();
-        genre.setTitle("drama");
-
-        var actor =getActorWtihSomeData();
+        var actor = getActorWithSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -332,9 +335,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         var movie = getOneMovieWithSomeData();
 
-        var genre = new Genre();
-        genre.setTitle("action");
-        genre = genreRepository.save(genre);
+        var genre = saveGenre();
         movie = movieRepository.save(movie);
         movie.setGenres(Set.of(genre));
 
@@ -351,15 +352,11 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     public void bindGenreToMovieNotSuccessMovieAdmin() throws Exception {
-        var genre = new Genre();
-        genre.setId(1001L);
-        genre.setTitle("action");
-
-        genreRepository.save(genre);
+        var genre = saveGenre();
         Long movieId = 1000L;
-        Long genreId = 1001L;
 
-        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
+
+        mockMvc.perform(put("/movies/" + movieId + "/genre/" + genre.getId()))
             .andExpect(status().isNotFound())
             .andExpect(content().string(movieNotFoundMessage));
     }
@@ -382,13 +379,12 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
-    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void getMovieFoundUser() throws Exception {
         var movie = saveOneMovieWithSomeData();
 
         var expectedResponse = objectMapper.writeValueAsString(movie);
 
-        mockMvc.perform(get("/movies/" + 1))
+        mockMvc.perform(get("/movies/" + movie.getId()))
             .andExpect(status().isOk())
             .andExpect(content().string(expectedResponse));
 
@@ -407,7 +403,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
-    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void getMoviesFoundUser() throws Exception {
         var movie = saveOneMovieWithSomeData();
 
@@ -446,10 +441,9 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     public void saveMovieWithInnerEntitiesUser() throws Exception {
         var movie = saveOneMovieWithSomeData();
 
-        var genre = new Genre();
-        genre.setTitle("drama");
+        var genre = getGenre();
 
-        var actor = getActorWtihSomeData();
+        var actor = getActorWithSomeData();
 
         var actorSet = new HashSet<Actor>();
         actorSet.add(actor);
@@ -505,10 +499,11 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
-    @Sql(statements = "insert into genre (id, title) values (1, 'action')")
     public void bindGenreToMovieNotSuccessMovieUser() throws Exception {
         Long movieId = 1L;
         Long genreId = 1L;
+        saveGenre();
+
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
             .andExpect(status().isForbidden());
@@ -517,10 +512,10 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
-    @Sql(statements = "insert into movie (id, title, age_limit, country_of_production, description, release_date) values(1,'The Terminator',16,'Country','desc','1984-10-26')")
     public void bindGenreToMovieNotSuccessGenreUser() throws Exception {
         Long movieId = 1L;
         Long genreId = 1L;
+        saveOneMovieWithSomeData();
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
             .andExpect(status().isForbidden());

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +52,16 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Autowired
     private GenreMapper genreMapper;
 
+    public Genre getGenre() {
+        var genre = new Genre();
+        genre.setTitle("action");
+        return genre;
+    }
+
+    public Genre saveGenre() {
+        return genreRepository.save(getGenre());
+    }
+
 
     @PostConstruct
     void initMessages() throws JsonProcessingException {
@@ -65,8 +73,7 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     public void saveGenreSuccessAdmin() throws Exception {
-        var genre = new Genre();
-        genre.setTitle("hdsfgihd");
+        var genre = getGenre();
         var requestContent = objectMapper.writeValueAsString(genre);
 
 
@@ -82,24 +89,24 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     public void saveGenreUnSuccessAdmin() throws Exception {
-        var genre = new Genre();
-        genre.setTitle("title");
-        genre.setId(1000L);
+        var genre = getGenre();
         var requestContent = objectMapper.writeValueAsString(genre);
+
+
+        var expectedResponse = objectMapper.writeValueAsString(genre);
 
         mockMvc.perform(post("/genre")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestContent))
-            .andExpect(status().is(400));
+            .andExpect(status().is(200))
+            .andExpect(jsonPath("$.title").value(genre.getTitle()));
     }
 
     @Test
     @Transactional
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     public void getGenresAdmin() throws Exception {
-        var genre = new Genre();
-        genre.setTitle("title");
-        genre  = genreRepository.save(genre);
+        var genre = saveGenre();
 
         var genreList = List.of(genreMapper.toDto(genre));
 
@@ -117,18 +124,14 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     public void deleteGenreSuccessAdmin() throws Exception {
-        var genre = new Genre();
-        genre.setId(1000L);
-        genre.setTitle("title");
-
-        genre = genreRepository.save(genre);
+        var genre = saveGenre();
 
         Assertions.assertEquals(genreRepository.count(), 1L);
 
 
-        mockMvc.perform(delete("/genre/"+ genre.getId()))
+        mockMvc.perform(delete("/genre/" + genre.getId()))
             .andExpect(status().isNoContent());
-        // to repository
+
         Assertions.assertEquals(genreRepository.count(), 0L);
 
 
@@ -152,8 +155,7 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
     public void saveGenreSuccessUser() throws Exception {
-        var genre = new Genre();
-        genre.setTitle("hdsfgihd");
+        var genre = getGenre();
         var requestContent = objectMapper.writeValueAsString(genre);
 
         mockMvc.perform(post("/genre")
@@ -167,11 +169,8 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     @Test
     @Transactional
     @WithMockUser(username = "user", authorities = {"read"})
-    @Sql(statements = "insert into genre(id, title) values(1,'title')")
     public void getGenresUser() throws Exception {
-        var genre = new Genre();
-        genre.setId(1L);
-        genre.setTitle("title");
+        var genre = saveGenre();
 
         var genreList = List.of(genreMapper.toDto(genre));
 
