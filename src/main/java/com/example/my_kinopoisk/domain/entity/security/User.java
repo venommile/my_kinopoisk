@@ -51,7 +51,5 @@ public class User implements Serializable {
     @Null(groups = OnCreate.class)
     private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "user")
-    private Set<Review> reviews = new HashSet<>();
 
 }

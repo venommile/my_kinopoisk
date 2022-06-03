@@ -38,11 +38,7 @@ public class Review {
 
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_name", referencedColumnName = "userName")
-    private User user;
-
-    @Column(name = "user_name", insertable = false, updatable = false)
+    @Column(name = "user_name")
     private String userName;
 
     @CreationTimestamp
@@ -61,7 +57,7 @@ public class Review {
     @Min(0)
     private Float rating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Movie movie;
 
 

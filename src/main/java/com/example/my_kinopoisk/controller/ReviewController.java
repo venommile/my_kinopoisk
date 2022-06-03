@@ -32,18 +32,14 @@ public class ReviewController {
     @PreAuthorize("hasAuthority('read')")
     @Validated(OnCreate.class)
     public ResponseEntity<Review> saveReview(@Valid @RequestBody Review review, Principal principal) {
-        var user = new User();//to service
-        user.setId(0L);//без дефолтного значения  не работает,хотя связываю по другой колонке
-        user.setUserName(principal.getName());
-
-        review.setUser(user);
+        review.setUserName(principal.getName());
         return ResponseEntity.ok(reviewService.save(review));
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<Review> updateReview(@Valid @RequestBody Review review, Principal principal) throws NoPermissionException {
-        if (principal.getName().equals(review.getUser().getUserName())) {
+        if (principal.getName().equals(review.getUserName())) {
             return ResponseEntity.ok(reviewService.save(review));
         }
         throw new NoPermissionException("You didn't have permission to modify it");
@@ -60,7 +56,7 @@ public class ReviewController {
     @DeleteMapping("/delete-own")
     @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<Void> deleteReview(@Valid @RequestBody Review review, Principal principal) throws NoPermissionException {
-        if (principal.getName().equals(review.getUser().getUserName())) {
+        if (principal.getName().equals(review.getUserName())) {
             return ResponseEntity.noContent().build();
         }
         throw new NoPermissionException("You didn't have permission to modify it");
