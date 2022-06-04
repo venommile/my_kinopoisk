@@ -6,7 +6,7 @@ import com.example.my_kinopoisk.domain.dto.MovieInListDto;
 import com.example.my_kinopoisk.domain.dto.MovieViewDto;
 import com.example.my_kinopoisk.domain.entity.Movie;
 import com.example.my_kinopoisk.domain.entity.Movie_;
-import com.example.my_kinopoisk.exception.MovieNotFoundException;
+import com.example.my_kinopoisk.problem.MovieNotFoundProblem;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
@@ -85,7 +85,7 @@ public class MovieService {
     }
 
     public Movie getMovie(Long id) {
-        return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
+        return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundProblem(id));
     }
 
     @Transactional

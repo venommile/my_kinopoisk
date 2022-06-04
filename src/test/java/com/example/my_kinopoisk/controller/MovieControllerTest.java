@@ -23,7 +23,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,21 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class MovieControllerTest extends MyKinopoiskApplicationTests {
-
-    String movieNotFound = "Movie was not found";
-    String genreNotFound = "Genre was not found";
-
-    String entityNotExists = "Entity with this id does not exists";
-
-    ErrorResponse entityNotExistsError;
-
-    ErrorResponse movieNotFoundError;
-    ErrorResponse genreNotFoundError;
-
-    String movieNotFoundMessage;
-    String genreNotFoundMessage;
-
-    String entityNotExistsMessage;
 
     @Autowired
     private MockMvc mockMvc;
@@ -85,7 +69,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Autowired
     private GenreRepository genreRepository;
 
-    public Actor getActorWithSomeData(){
+    public Actor getActorWithSomeData() {
         var actor = new Actor();
         actor.setSurname("actor surname");
         actor.setName("actor name");
@@ -94,7 +78,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     }
 
 
-    public Movie getOneMovieWithSomeData(){
+    public Movie getOneMovieWithSomeData() {
         var movieId = 1L;
         var movie = new Movie();
         movie.setId(movieId);
@@ -106,7 +90,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         return movie;
     }
 
-    public FilmCrew getFilmCrewWithData(){
+    public FilmCrew getFilmCrewWithData() {
         var filmCrew = new FilmCrew();
         filmCrew.setRole("some role");
         filmCrew.setName("some name");
@@ -114,31 +98,20 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         return filmCrew;
     }
 
-    public Genre getGenre(){
+    public Genre getGenre() {
         var genre = new Genre();
         genre.setTitle("action");
         return genre;
     }
-    public Genre saveGenre(){
+
+    public Genre saveGenre() {
         return genreRepository.save(getGenre());
     }
 
-    public Movie saveOneMovieWithSomeData(){
+    public Movie saveOneMovieWithSomeData() {
         return movieRepository.save(getOneMovieWithSomeData());
     }
 
-    @PostConstruct
-    void initMessages() throws JsonProcessingException {
-        movieNotFoundError = new ErrorResponse(movieNotFound);
-        genreNotFoundError = new ErrorResponse(genreNotFound);
-
-        entityNotExistsError = new ErrorResponse(entityNotExists);
-
-        movieNotFoundMessage = objectMapper.writeValueAsString(movieNotFoundError);
-        genreNotFoundMessage = objectMapper.writeValueAsString(genreNotFoundError);
-
-        entityNotExistsMessage = objectMapper.writeValueAsString(entityNotExistsError);
-    }
 
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})
@@ -160,7 +133,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     public void getMovieNotFoundAdmin() throws Exception {
         mockMvc.perform(get("/movies/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(jsonPath("$.detail").value(String.format("Movie '%s' not found", 1)));
     }
 
 
@@ -229,7 +202,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
 
         var requestContent = objectMapper.writeValueAsString(movie);
-
 
 
         mockMvc.perform(post("/movies/")
@@ -306,15 +278,14 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     @Transactional
     public void deleteMoviesNotSuccessAdmin() throws Exception {
         mockMvc.perform(delete("/movies/" + 1))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string(entityNotExistsMessage));
+            .andExpect(status().is5xxServerError());
     }
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     @Test
     @Transactional
     public void deleteMoviesSuccessAdmin() throws Exception {
-       var movie =  saveOneMovieWithSomeData();
+        var movie = saveOneMovieWithSomeData();
 
 
         Assertions.assertEquals(1L, movieRepository.count());
@@ -340,7 +311,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
         movie.setGenres(Set.of(genre));
 
 
-
         var expectedResponse = objectMapper.writeValueAsString(movieMapper.toViewDto(movie));
         mockMvc.perform(put("/movies/" + movie.getId() + "/genre/" + genre.getId()))
             .andExpect(status().isOk())
@@ -358,7 +328,8 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genre.getId()))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value(String.format("Movie '%s' not found", movieId)));
     }
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})
@@ -373,7 +344,8 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(genreNotFoundMessage));
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value(String.format("Genre '%s' not found", genreId)));
     }
 
     @Test
@@ -396,7 +368,8 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     public void getMovieNotFoundUser() throws Exception {
         mockMvc.perform(get("/movies/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(movieNotFoundMessage));
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value(String.format("Movie '%s' not found", 1)));
     }
 
 

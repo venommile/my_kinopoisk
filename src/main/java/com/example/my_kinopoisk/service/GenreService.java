@@ -2,7 +2,7 @@ package com.example.my_kinopoisk.service;
 
 import com.example.my_kinopoisk.domain.dto.GenreDto;
 import com.example.my_kinopoisk.domain.entity.Genre;
-import com.example.my_kinopoisk.exception.GenreNotFoundException;
+import com.example.my_kinopoisk.problem.GenreNotFoundProblem;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.service.mapper.GenreMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class GenreService {
     }
 
     public Genre getGenre(Long id) {
-        return genreRepository.findById(id).orElseThrow(GenreNotFoundException::new);
+        return genreRepository.findById(id).orElseThrow(()->new GenreNotFoundProblem(id));
     }
 
     public List<Genre> getGenresByIds(Iterable<Long> genreIds) {

@@ -143,8 +143,8 @@ public class GenreControllerTest extends MyKinopoiskApplicationTests {
     public void deleteGenreNotSuccessAdmin() throws Exception {
 
         mockMvc.perform(delete("/genre/1"))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string(genreNotFoundMessage));
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value(String.format("Genre '%s' not found", 1)));
 
         Assertions.assertEquals(genreRepository.count(), 0L);
 

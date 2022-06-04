@@ -6,7 +6,7 @@ import com.example.my_kinopoisk.domain.dto.PersonViewDto;
 import com.example.my_kinopoisk.domain.entity.ParticipantFilm;
 import com.example.my_kinopoisk.domain.entity.Person;
 import com.example.my_kinopoisk.domain.entity.Person_;
-import com.example.my_kinopoisk.exception.PersonNotFoundException;
+import com.example.my_kinopoisk.problem.PersonNotFoundProblem;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -60,7 +58,7 @@ public class PersonService {
     }
 
     public Person getPerson(Long id) {
-        return personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
+        return personRepository.findById(id).orElseThrow(() -> new PersonNotFoundProblem(id));
     }
 
     public List<PersonInListDto> getPersonsOnlyDto(Pageable pageable) {

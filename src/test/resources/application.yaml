@@ -18,6 +18,9 @@ spring:
   liquibase:
     change-log: classpath:testdb/changelog/dbchangelog.xml
     enabled: true
+
+  main:
+    allow-bean-definition-overriding: true
 server:
   port: 8081
 

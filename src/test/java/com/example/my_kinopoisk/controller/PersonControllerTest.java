@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -92,7 +93,8 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     public void getMovieNotFoundAdmin() throws Exception {
         mockMvc.perform(get("/persons/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(content().string(personNotFoundMessage));
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value(String.format("Person '%s' not found", 1)));
     }
 
 
