@@ -21,7 +21,6 @@ public class ReviewService {
     private final UserService userService;
 
     public Review save(Review review) {
-        // userService.getUser(review.getUserName());
         return reviewRepository.save(review);
     }
 

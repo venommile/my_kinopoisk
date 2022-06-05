@@ -8,7 +8,7 @@ import java.net.URI;
 public class PersonNotFoundProblem extends AbstractThrowableProblem {
 
 
-    private static String currentURI = "https://localhost:8080/"; //get from .yml file
+    private static final String currentURI = "https://localhost:8080/"; //get from .yml file
 
 
     private static final URI TYPE
