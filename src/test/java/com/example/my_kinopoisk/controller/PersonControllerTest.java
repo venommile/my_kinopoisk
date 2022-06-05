@@ -93,7 +93,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     public void getMovieNotFoundAdmin() throws Exception {
         mockMvc.perform(get("/persons/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.status").value("NOT_FOUND"))
             .andExpect(jsonPath("$.detail").value(String.format("Person '%s' not found", 1)));
     }
 

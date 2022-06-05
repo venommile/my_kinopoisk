@@ -123,12 +123,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>problem</artifactId>
-            <version>${problem.version}</version>
-        </dependency>
-
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -155,17 +149,6 @@
 
 
         <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>problem-spring-web-starter</artifactId>
-            <version>0.27.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>jackson-datatype-problem</artifactId>
-            <version>${problem.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.13.3</version>
@@ -173,8 +156,8 @@
 
         <dependency>
             <groupId>org.zalando</groupId>
-            <artifactId>problem-gson</artifactId>
-            <version>${problem.version}</version>
+            <artifactId>problem-spring-web</artifactId>
+            <version>0.28.0-RC.0</version>
         </dependency>
 
     </dependencies>

@@ -328,7 +328,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genre.getId()))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.status").value("NOT_FOUND"))
             .andExpect(jsonPath("$.detail").value(String.format("Movie '%s' not found", movieId)));
     }
 
@@ -344,7 +344,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
 
         mockMvc.perform(put("/movies/" + movieId + "/genre/" + genreId))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.status").value("NOT_FOUND"))
             .andExpect(jsonPath("$.detail").value(String.format("Genre '%s' not found", genreId)));
     }
 
@@ -368,7 +368,7 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     public void getMovieNotFoundUser() throws Exception {
         mockMvc.perform(get("/movies/" + 1))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.status").value("NOT_FOUND"))
             .andExpect(jsonPath("$.detail").value(String.format("Movie '%s' not found", 1)));
     }
 
