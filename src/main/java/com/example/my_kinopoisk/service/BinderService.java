@@ -17,8 +17,8 @@ public class BinderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public MovieViewDto bindMovieGenre(Long movieId, Long genreId) {
-        var movie = movieService.getMovie(movieId);
-        var genre = genreService.getGenre(genreId);
+        var movie = movieService.get(movieId);
+        var genre = genreService.get(genreId);
         movie.addGenre(genre);
         return movieMapper.toViewDto(movieService.saveMovie(movie));
     }

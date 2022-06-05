@@ -7,14 +7,12 @@ import com.example.my_kinopoisk.domain.entity.Actor;
 import com.example.my_kinopoisk.domain.entity.FilmCrew;
 import com.example.my_kinopoisk.domain.entity.Genre;
 import com.example.my_kinopoisk.domain.entity.Movie;
-import com.example.my_kinopoisk.message.ErrorResponse;
 import com.example.my_kinopoisk.repository.ActorRepository;
 import com.example.my_kinopoisk.repository.FilmCrewRepository;
 import com.example.my_kinopoisk.repository.GenreRepository;
 import com.example.my_kinopoisk.repository.MovieRepository;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.MovieMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -111,7 +108,6 @@ public class MovieControllerTest extends MyKinopoiskApplicationTests {
     public Movie saveOneMovieWithSomeData() {
         return movieRepository.save(getOneMovieWithSomeData());
     }
-
 
 
     @WithMockUser(username = "admin", authorities = {"read", "write"})

@@ -49,13 +49,13 @@ public class MovieController {
     @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<MovieViewDto> saveMovie(@Valid @RequestBody MovieCreateDto movieDto) {
-        return ResponseEntity.ok(movieService.saveMovieDto(movieDto));
+        return ResponseEntity.ok(movieService.save(movieDto));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
-        movieService.deleteMovie(id);
+        movieService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

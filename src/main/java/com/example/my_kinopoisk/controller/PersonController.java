@@ -40,20 +40,20 @@ public class PersonController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<PersonViewDto> getPerson(@PathVariable Long id) {
-        return ResponseEntity.ok(personService.getPersonDto(id));
+        return ResponseEntity.ok(personService.getDto(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
     @Validated(OnCreate.class)
     public ResponseEntity<PersonViewDto> savePerson(@Valid @RequestBody PersonCreateDto personDto) {
-        return ResponseEntity.ok(personService.savePerson(personDto));
+        return ResponseEntity.ok(personService.save(personDto));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
-        personService.deletePerson(id);
+        personService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -47,7 +47,7 @@ public class GenreController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
-        genreService.deleteGenre(id);
+        genreService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

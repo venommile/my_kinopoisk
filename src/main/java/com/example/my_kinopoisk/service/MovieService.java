@@ -35,7 +35,7 @@ public class MovieService {
     private final GenreMapper genreMapper;
 
 
-    public List<MovieInListDto> getMovies(String title, List<GenreDto> genreDtoList, Pageable pageable) {
+    public List<MovieInListDto> get(String title, List<GenreDto> genreDtoList, Pageable pageable) {
 
         var foundMovies = movieRepository.findAll(
             Specification.where(titleContainingIgnoreCase(title).and(containsGenre(genreDtoList))), pageable);
@@ -72,7 +72,7 @@ public class MovieService {
 
     }
 
-    public List<Movie> getMovies(Pageable pageable) {
+    public List<Movie> get(Pageable pageable) {
         return StreamSupport.stream(
             movieRepository.findAll(pageable).spliterator(),
             false).collect(Collectors.toList());
@@ -80,11 +80,11 @@ public class MovieService {
 
     public MovieViewDto getMovieViewDto(Long id) {
         return movieMapper.toViewDto(
-            getMovie(id)
+            get(id)
         );
     }
 
-    public Movie getMovie(Long id) {
+    public Movie get(Long id) {
         return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundProblem(id));
     }
 
@@ -95,7 +95,7 @@ public class MovieService {
 
 
     @Transactional
-    public MovieInListDto saveMovieDto(MovieInListDto movieInListDto) {
+    public MovieInListDto save(MovieInListDto movieInListDto) {
 
         return movieMapper.toInListDto(
             saveMovie(
@@ -105,7 +105,7 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieViewDto saveMovieDto(MovieCreateDto movieDto) {
+    public MovieViewDto save(MovieCreateDto movieDto) {
         var movie = movieMapper.toEntity(movieDto);
         movie.setFilmCrews(
             filmCrewService.saveAndBindPerson(
@@ -133,13 +133,13 @@ public class MovieService {
 
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteMovie(Long id) {
+    public void delete(Long id) {
         movieRepository.deleteById(id);
     }
 
 
     public List<MovieInListDto> getMoviesInListDto(Pageable pageable) {
-        return getMovies(pageable).stream().map(movieMapper::toInListDto).collect(Collectors.toList());
+        return get(pageable).stream().map(movieMapper::toInListDto).collect(Collectors.toList());
     }
 
 

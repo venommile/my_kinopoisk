@@ -1,6 +1,5 @@
 package com.example.my_kinopoisk.problem;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 

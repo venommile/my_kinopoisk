@@ -35,7 +35,7 @@ public class SearchController {
     @PreAuthorize("hasAuthority('read')")
     @Validated(OnSearch.class)
     public Page<MovieInListDto> searchMovie(@Valid @RequestBody MovieSearchWrapper movieSearchWrapper, @ParameterObject Pageable pageable) {
-        return new PageImpl<>(movieService.getMovies(movieSearchWrapper.getTitle(),
+        return new PageImpl<>(movieService.get(movieSearchWrapper.getTitle(),
             movieSearchWrapper.getValidatedList(),
             pageable)
         );

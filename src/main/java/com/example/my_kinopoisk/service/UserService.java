@@ -22,7 +22,7 @@ public class UserService {
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public UserDto getUser(String userName) {
+    public UserDto get(String userName) {
         return userRepository.findByUserName(userName)
             .map(userMapper::toDto)
             .orElseThrow();
@@ -30,8 +30,9 @@ public class UserService {
 
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserDto saveView(User user){
-        if(userRepository.existsUserByLoginOrUserName(user.getLogin(), user.getUserName())) throw new UserAlreadyExistsException();
+    public UserDto save(User user) {
+        if (userRepository.existsUserByLoginOrUserName(user.getLogin(), user.getUserName()))
+            throw new UserAlreadyExistsException();
         user.setRole(Role.USER);
 
         user.setStatus(Status.ACTIVE);

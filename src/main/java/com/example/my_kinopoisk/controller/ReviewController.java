@@ -1,7 +1,6 @@
 package com.example.my_kinopoisk.controller;
 
 import com.example.my_kinopoisk.domain.entity.Review;
-import com.example.my_kinopoisk.domain.entity.security.User;
 import com.example.my_kinopoisk.service.ReviewService;
 import com.example.my_kinopoisk.validation.OnCreate;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +47,7 @@ public class ReviewController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('delete_comments')")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        reviewService.deleteReview(id);
+        reviewService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

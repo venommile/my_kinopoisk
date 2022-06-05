@@ -50,7 +50,9 @@ public class SecurityUser implements UserDetails {
         return username;
     }
 
-    public String getLogin(){ return login;}
+    public String getLogin() {
+        return login;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

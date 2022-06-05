@@ -28,7 +28,7 @@ public class PersonService {
     private final PersonMapper personMapper;
 
 
-    public List<Person> getPersons(Pageable pageable) {
+    public List<Person> getDto(Pageable pageable) {
         return StreamSupport.stream(
             personRepository
                 .findAll(pageable)
@@ -36,13 +36,13 @@ public class PersonService {
             false).collect(Collectors.toList());
     }
 
-    public void deletePerson(Long id) {
+    public void delete(Long id) {
         personRepository.deleteById(id);
     }
 
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public PersonViewDto savePerson(PersonCreateDto personDto) {
+    public PersonViewDto save(PersonCreateDto personDto) {
         var foundPerson = personRepository.findByNameAndSurname(personDto.getName(), personDto.getSurname());
         var person = personMapper.toEntity(personDto);
         person.setId(foundPerson.map(Person::getId).orElse(null));
@@ -51,18 +51,18 @@ public class PersonService {
         );
     }
 
-    public PersonViewDto getPersonDto(Long id) {
+    public PersonViewDto getDto(Long id) {
         return personMapper.toViewDto(
-            getPerson(id)
+            get(id)
         );
     }
 
-    public Person getPerson(Long id) {
+    public Person get(Long id) {
         return personRepository.findById(id).orElseThrow(() -> new PersonNotFoundProblem(id));
     }
 
     public List<PersonInListDto> getPersonsOnlyDto(Pageable pageable) {
-        return getPersons(pageable).stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
+        return getDto(pageable).stream().map(personMapper::toPersonInListDto).collect(Collectors.toList());
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

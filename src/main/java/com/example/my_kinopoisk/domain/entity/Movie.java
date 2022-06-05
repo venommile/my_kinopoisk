@@ -45,7 +45,7 @@ public class Movie {
 
     private LocalDate releaseDate;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade =
+    @ManyToMany(fetch = FetchType.LAZY, cascade =
         {
             CascadeType.DETACH,
             CascadeType.MERGE,

@@ -19,8 +19,9 @@ public class ReviewService {
     private final MovieRepository movieRepository;
 
     private final UserService userService;
+
     public Review save(Review review) {
-       // userService.getUser(review.getUserName());
+        // userService.getUser(review.getUserName());
         return reviewRepository.save(review);
     }
 
@@ -29,16 +30,16 @@ public class ReviewService {
     }
 
 
-    public void deleteReview(Long id) {
+    public void delete(Long id) {
         reviewRepository.deleteById(id);
     }
 
-    public Optional<Review> findReview(Long id) {
+    public Optional<Review> find(Long id) {
         return reviewRepository.findById(id);
     }
 
-    public Review getReview(Long id) {
-        return findReview(id).orElseThrow(() -> new NoSuchElementException("Review with this id does not found"));
+    public Review get(Long id) {
+        return find(id).orElseThrow(() -> new NoSuchElementException("Review with this id does not found"));
     }
 
 

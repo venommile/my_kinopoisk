@@ -25,8 +25,8 @@ public class GenreService {
         return genreRepository.save(genre);
     }
 
-    public Genre getGenre(Long id) {
-        return genreRepository.findById(id).orElseThrow(()->new GenreNotFoundProblem(id));
+    public Genre get(Long id) {
+        return genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundProblem(id));
     }
 
     public List<Genre> getGenresByIds(Iterable<Long> genreIds) {
@@ -42,8 +42,8 @@ public class GenreService {
     }
 
 
-    public void deleteGenre(Long id) {
-        getGenre(id);//как сделать без этого
+    public void delete(Long id) {
+        get(id);//как сделать без этого
         genreRepository.deleteById(id);
     }
 

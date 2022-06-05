@@ -60,7 +60,7 @@ public class Person {
     })
     private Set<Actor> actorRoles = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade ={
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE,
         CascadeType.PERSIST,

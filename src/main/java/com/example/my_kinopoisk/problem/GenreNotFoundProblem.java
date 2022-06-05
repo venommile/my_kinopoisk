@@ -1,13 +1,11 @@
 package com.example.my_kinopoisk.problem;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 
-import javax.annotation.PostConstruct;
 import java.net.URI;
 
-public class GenreNotFoundProblem  extends AbstractThrowableProblem {
+public class GenreNotFoundProblem extends AbstractThrowableProblem {
 
 
     private static String currentURI = "https://localhost:8080/"; //get from .yml file

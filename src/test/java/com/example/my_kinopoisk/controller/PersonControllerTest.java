@@ -4,10 +4,8 @@ package com.example.my_kinopoisk.controller;
 import com.example.my_kinopoisk.MyKinopoiskApplicationTests;
 import com.example.my_kinopoisk.domain.dto.PersonInListDto;
 import com.example.my_kinopoisk.domain.entity.Person;
-import com.example.my_kinopoisk.message.ErrorResponse;
 import com.example.my_kinopoisk.repository.PersonRepository;
 import com.example.my_kinopoisk.service.mapper.PersonMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,9 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class PersonControllerTest extends MyKinopoiskApplicationTests {
 
-    String personNotFound = "Person was not found";
-    ErrorResponse personNotFoundError;
-    String personNotFoundMessage;
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,13 +45,6 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
 
     @Autowired
     private PersonRepository personRepository;
-
-    @PostConstruct
-    void initMessages() throws JsonProcessingException {
-        personNotFoundError = new ErrorResponse(personNotFound);
-
-        personNotFoundMessage = objectMapper.writeValueAsString(personNotFoundError);
-    }
 
     public Person getPersonWithSomeData() {
         var person = new Person();
@@ -120,7 +107,7 @@ public class PersonControllerTest extends MyKinopoiskApplicationTests {
     @WithMockUser(username = "admin", authorities = {"read", "write"})
     @Test
     @Transactional
-    public void deletePersonsSuccessAdmin() throws Exception {
+    public void deletePersonSuccessAdmin() throws Exception {
         var person = savePersonWithSomeData();
 
         Assertions.assertEquals(1L, personRepository.count());
